@@ -90,7 +90,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	public static final int ELEMENT_WAIT_TIMEOUT_SECONDS = 40;
 	public static final int ELEMENT_POLLING_TIME_MILIS = 50; //Waiting for element appearing or visibility.
 	public static final int PAGE_LOAD_TIMEOUT_SECONDS = 30;
-	public static final int JQUERY_LOAD_TIMEOUT_SECONDS = 30;
+	public static final int JQUERY_LOAD_TIMEOUT_SECONDS = 30; //Java constant declaration for tracking jQuery loading timeout
 	public static final int SESSION_TIMEOUT_MINUTES = 16;
 	JavascriptExecutor js = (JavascriptExecutor) driver; //Controlling browser with JavaScript commands.
 	WebDriverWait wait = null;
@@ -121,21 +121,21 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 		// Wait for Javascript or JQuery to load
 	public static void waitForPageAndAjaxToLoad() { //A shared method that waits for both the webpage AND background requests to fully finish loading.
 
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(JQUERY_LOAD_TIMEOUT_SECONDS));
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(JQUERY_LOAD_TIMEOUT_SECONDS)); // Creating wait for JQuery.
 		// Wait for document.readyState to be 'complete'
 		wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState")
 				.equals("complete"));
 		// Wait for jQuery.active == 0 if jQuery is present
 		try {
-			Boolean jQueryDefined = (Boolean) ((JavascriptExecutor) driver)
-					.executeScript("return typeof jQuery != 'undefined'");
+			Boolean jQueryDefined = (Boolean) ((JavascriptExecutor) driver) 
+					.executeScript("return typeof jQuery != 'undefined'"); // Checking JQuery existance using JavaScript
 			if (jQueryDefined) {
 				wait.until(webDriver -> (Boolean) ((JavascriptExecutor) webDriver)
-						.executeScript("return jQuery.active == 0"));
+						.executeScript("return jQuery.active == 0"));  //Waits until all jQuery AJAX requests have completed
 			}
 		} catch (Exception e) {
 			// jQuery not present or error occurred — skip AJAX wait
-			System.out.println("jQuery not detected or error occurred. Skipping AJAX wait.");
+			System.out.println("jQuery not detected or error occurred. Skipping AJAX wait."); //If JQuery not found then skip wait and go next step.
 		}
 
 	}
@@ -144,12 +144,12 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	public WebElement waitForElement(By locator) {
 
 		WebElement elementLocator = null;
-		removeBorder();
+		removeBorder();  //// Removes visual debug borders
 		logger.info("Checking visibility of the Element on browser screen");
 		// Prioritize ExpectedConditions for efficiency
 		Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(ELEMENT_WAIT_TIMEOUT_SECONDS));
 		try {
-			wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+			wait.until(ExpectedConditions.presenceOfElementLocated(locator)); //Waiting to DOM existance
 			elementLocator = driver.findElement(locator);
 		} catch (TimeoutException e) {
 			// Handle timeout exception (optional, log or throw as needed)
@@ -183,7 +183,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	public WebElement waitForDisableElement(By locator) {
 
-		removeBorder(); // here we are calling removeBorder method . the method is in this same class (common methods) . this method is removing any border that was created earliar by Us . using java script.
+		removeBorder(); // here we are calling removeBorder method. This method is removing any border that was created earliar using java script.
 		logger.info("Waiting for the disabled element to be present on the browser screen");
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(ELEMENT_WAIT_TIMEOUT_SECONDS));
 		WebElement elementLocator = null;
@@ -193,7 +193,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 				try {
 					WebElement element = driver.findElement(locator);
 					if (!element.isEnabled()) {
-						return element;
+						return element; //Returns the element immediately if it's disabled
 					}
 				} catch (Exception e) {
 					// Element not found or stale, continue waiting
@@ -203,7 +203,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 			});
 		} catch (TimeoutException e) {
 			logger.warn(LogColor.RED + "Disabled element with locator " + locator + " not found within timeout."
-					+ LogColor.RESET);
+					+ LogColor.RESET); //After colorful log it resets to normal text color for next.
 			return null;
 		}
 		drawborder(elementLocator);
@@ -213,17 +213,17 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public void waitForPageToLoadfor(int sec) {
+	public void waitForPageToLoadfor(int sec) { // Used this method to wait for page load for specific time.
 
 		logger.info("Wait for Web Page to load completely");
-		wait = new WebDriverWait(this.driver, Duration.ofSeconds(sec * 1000));
+		wait = new WebDriverWait(this.driver, Duration.ofSeconds(sec * 1000)); //Creating wait 
 		Function<WebDriver, Boolean> function = new Function<WebDriver, Boolean>() {
 			public Boolean apply(WebDriver arg0) {
 
 				boolean isLoaded = false;
 				JavascriptExecutor js = (JavascriptExecutor) arg0;
 				if (js.executeScript("return document.readyState").toString().equalsIgnoreCase("complete")) {
-					isLoaded = true;
+					isLoaded = true; //Checking if page is ready to interact or not
 					logger.info("Web Page loaded successfully.");
 				}
 				return isLoaded;
@@ -235,17 +235,17 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	}
 
 	// Hard wait for specific second :
-	public static void waitFor(int sec) {
+	public static void waitFor(int sec) { 
 
 		try {
 			Thread.sleep(sec * 1000);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			e.printStackTrace(); //Print detail error log with strace.
 		}
 
 	}
 
-	public static void waitForMlsec(long sec) {
+	public static void waitForMlsec(long sec) { //Wait for milisec
 
 		try {
 			Thread.sleep(sec);
@@ -255,14 +255,14 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public ArrayList<WebElement> waitForTableRows(By locator) {
+	public ArrayList<WebElement> waitForTableRows(By locator) { //Waits for ALL table rows to be ready.
 
 		logger.info("Waiting for multiple <tr> elements to be visible and enabled on the screen");
-		Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(ELEMENT_WAIT_TIMEOUT_SECONDS));
+		Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(ELEMENT_WAIT_TIMEOUT_SECONDS)); //Creates wait
 		ArrayList<WebElement> rowElements = new ArrayList<>();
 		try {
 			// Wait until at least one <tr> element is present
-			wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
+			wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator)); //waiting for element to be present.
 			// Wait until all <tr> elements are visible and enabled
 			List<WebElement> elements = wait.until(driver -> {
 				List<WebElement> foundElements = driver.findElements(locator);
@@ -285,14 +285,14 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public void waitForNetworkIdle() {
+	public void waitForNetworkIdle() { //Waits for all network requests to complete
 
 		logger.info("Wait for Web Page to load completely");
-		JavascriptExecutor js = (JavascriptExecutor) driver;
+		JavascriptExecutor js = (JavascriptExecutor) driver; //JavaScript calling to execute
 		long lastCount = -1;
 		long sameCountTimes = 0;
 		for (int i = 0; i < 100; i++) {
-			long currentCount = (long) js.executeScript(
+			long currentCount = (long) js.executeScript( //Counting http requests.
 					"return window.performance.getEntriesByType('resource').filter(r => !r.responseEnd).length;");
 			if (currentCount == lastCount) {
 				sameCountTimes++;
@@ -310,7 +310,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public WebElement waitForElement(WebElement locator) {
+	public WebElement waitForElement(WebElement locator) { //Wait for  WebElemen visible
 
 		logger.info("Checking visibility of the Element on browser screen");
 		// Prioritize ExpectedConditions for efficiency
@@ -330,7 +330,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 				public WebElement apply(WebDriver driver) {
 
 					if (locator.isDisplayed() && locator.isEnabled()) {
-						return locator;
+						return locator; //If displayed and enabled then return and interact with element.
 					} else {
 						return null; // Wait for element to become both visible and enabled
 					}
@@ -348,17 +348,17 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 // browserUtils	
 	@SuppressWarnings("deprecation")
-	public static WebElement fluentWait(final WebElement webElement, int timeinsec) {
+	public static WebElement fluentWait(final WebElement webElement, int timeinsec) { //Flexible wait with polling. For dynamic elements
 
 		FluentWait<WebDriver> wait = new FluentWait<WebDriver>(Driver.getDriver())
 				// .withTimeout(timeinsec, TimeUnit.SECONDS).pollingEvery(timeinsec,
 				// TimeUnit.SECONDS)
-				.withTimeout(Duration.ofSeconds(timeinsec)).pollingEvery(Duration.ofSeconds(timeinsec))
+				.withTimeout(Duration.ofSeconds(timeinsec)).pollingEvery(Duration.ofSeconds(timeinsec)) // Repeatedly checking
 				.ignoring(NoSuchElementException.class);
-		WebElement element = wait.until(new Function<WebDriver, WebElement>() {
+		WebElement element = wait.until(new Function<WebDriver, WebElement>() { // Wait for repeatedly check for valid web element
 			public WebElement apply(WebDriver driver) {
 
-				return webElement;
+				return webElement; // Simply returns web element
 
 			}
 		});
@@ -375,7 +375,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public void waitForClickablility(WebElement locator) {
+	public void waitForClickablility(WebElement locator) { //wait for element to clickable.
 
 		WebElement element;
 //		try {
@@ -411,17 +411,17 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	}
 	// Wait for an Alert to appear
 
-	public Alert waitForAlert() {
+	public Alert waitForAlert() { //wait for pop-up alert
 
 		logger.info("Wait for An alert to appear");
-		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver) //Dynamic wait for JavaScript alert
 				.withTimeout(Duration.ofSeconds(ELEMENT_WAIT_TIMEOUT_SECONDS))
 				.pollingEvery(Duration.ofMillis(ELEMENT_POLLING_TIME_MILIS)).ignoring(NoAlertPresentException.class);
-		Function<WebDriver, Alert> function = new Function<WebDriver, Alert>() {
+		Function<WebDriver, Alert> function = new Function<WebDriver, Alert>() { // wait for JavaScript alert/pop-up dialogs to appear
 			public Alert apply(WebDriver arg0) {
 
 				logger.info("Waiting for the alert");
-				Alert alert = driver.switchTo().alert();
+				Alert alert = driver.switchTo().alert(); //Handling pop-up alert.
 				return alert;
 
 			}
@@ -430,7 +430,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 	
-	public String getAlertText() {
+	public String getAlertText() { //Get's text from alert.
 	    try {
 	        // Switch to the alert
 	        Alert alert = waitForAlert();
@@ -443,18 +443,18 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	        return alertText;
 	    } catch (NoAlertPresentException e) {
-	        throw new IllegalStateException("No alert is present to capture text.", e);
+	        throw new IllegalStateException("No alert is present to capture text.", e); //Display message if no exception found.
 	    }
 	}
 
 	// wait for URL
-	public static void waitForUrlContains(String expectedSubstring) {
+	public static void waitForUrlContains(String expectedSubstring) { //Wait to get url specific content text.
 
 		try {
 			logger.info("waiting for URL to Contain: " + expectedSubstring);
 			Duration timeToWaitInSec = Duration.ofSeconds(PAGE_LOAD_TIMEOUT_SECONDS);
 			WebDriverWait wait = new WebDriverWait(Driver.getDriver(), timeToWaitInSec);
-			Boolean URlContainsExpect = wait.until(ExpectedConditions.urlContains(expectedSubstring));
+			Boolean URlContainsExpect = wait.until(ExpectedConditions.urlContains(expectedSubstring)); //Wait till get a substring or text from url.
 			logger.info("URL Contains : " + expectedSubstring);
 		} catch (Exception e) {
 			logger.info("URL Doesn't Contains : " + expectedSubstring);
@@ -468,7 +468,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	 * Display Methods--------------------------------------------------------
 	 * -------------------------------------------------------------------------------------------------------------------------------------------
 	 **/
-	public boolean isElementPresent(By locator) {
+	public boolean isElementPresent(By locator) { //checking if element is exist or not
 
 		// Save the current implicit wait
 		Duration originalImplicitWait = driver.manage().timeouts().getImplicitWaitTimeout();
@@ -492,13 +492,13 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public boolean isElementDisplayed(WebElement locator) {
+	public boolean isElementDisplayed(WebElement locator) { //checking if element is displayed or not.
 
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(0));
 		// .implicitlyWait(0, TimeUnit.SECONDS);
 		logger.info("Checking visibility of the Element on browser screen");
 		try {
-			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(30))
+			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(30)) //Wait for repeatedly Checking polling/dynamic elemeny
 					.pollingEvery(Duration.ofMillis(ELEMENT_POLLING_TIME_MILIS)).ignoring(Exception.class);
 			Function<WebDriver, Boolean> function = new Function<WebDriver, Boolean>() {
 				public Boolean apply(WebDriver arg0) {
@@ -520,7 +520,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public boolean isElementStableAndVisible(WebElement element) {
+	public boolean isElementStableAndVisible(WebElement element) { //Checking Element Stability and visibility to interact with.
 
 		// Save the current implicit wait
 		Duration originalImplicitWait = driver.manage().timeouts().getImplicitWaitTimeout();
@@ -538,7 +538,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 				}
 			});
 			drawborder(element); // Optional: highlight the element
-			removeBorder();
+			removeBorder();  //Removing previous borders.
 			logger.info("isElementStableAndVisible=True");
 			return true;
 		} catch (TimeoutException e) {
@@ -551,23 +551,23 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public void highlightElement(WebElement locator) {
+	public void highlightElement(WebElement locator) { //Highlighting element interactions for better visibility to debug in future.
 
-		removeBorder();
+		removeBorder(); //Removes previous highlights.
 		for (int i = 0; i < 3; i++) {
-			drawborder(locator);
+			drawborder(locator); //loop for creating repeatedly 3 times blinking and removing highlights
 			removeBorder();
 		}
 
 	}
 
-	public boolean isElementPresentbyJS_ShadowRoot(By locator) {
+	public boolean isElementPresentbyJS_ShadowRoot(By locator) { //Checks if an element exists within Shadow DOM using JavaScript
 
 //    	waitFor(3);
 		try {
 			String script = "return arguments[0].shadowRoot || arguments[0].getRootNode().host || arguments[0].getRootNode()";
 			WebElement element = driver.findElement(locator);
-			Object shadowRoot = ((JavascriptExecutor) driver).executeScript(script, element);
+			Object shadowRoot = ((JavascriptExecutor) driver).executeScript(script, element); //checking if element is inside shadow dom or not by running JavaScript Command.
 			return shadowRoot != null;
 		} catch (NoSuchElementException e) {
 			return false;
@@ -575,7 +575,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public boolean isElementPresentbyJS(By locator) {
+	public boolean isElementPresentbyJS(By locator) {  //Checks if an element exists in the DOM using JavaScript command.
 
 		try {
 			waitForElement(locator);
@@ -593,10 +593,10 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	 * Utilities ------------------------------------------------------------
 	 * -------------------------------------------------------------------------------------------------------------------------------------------
 	 **/
-	public static void jsclick(WebDriver driver, WebElement element) {
+	public static void jsclick(WebDriver driver, WebElement element) {  //Performs a click on a web element using JavaScript
 
 		JavascriptExecutor js = (JavascriptExecutor) driver;
-		js.executeScript("arguments[0].click()", element);
+		js.executeScript("arguments[0].click()", element); //Executes JavaScript click on the specified web element.
 
 	}
 	
@@ -612,7 +612,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	 * @param sourceFormat The format of the dateValue (e.g., "M/d/yyyy" for flexible Excel dates).
 	 * @return The date string in the target format (e.g., "1980-10-16").
 	 */
-	public static String standardizeDateFormat(String dateValue, String sourceFormat) {
+	public static String standardizeDateFormat(String dateValue, String sourceFormat) { //Converts a date from one format to a standardized format.
 	    
 	    // The target format is the standard HTML input type="date" value format
 	    final DateTimeFormatter TARGET_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -630,7 +630,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	        // Log success (optional, but helpful)
 	        logger.debug("Date standardized: " + dateValue + " -> " + targetDate);
 	        
-	        return targetDate;
+	        return targetDate; //Return date in expected format.
 	        
 	    } catch (Exception e) {
 	        // If parsing fails (e.g., date value is garbage, blank, or not in expected format)
@@ -663,13 +663,13 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	 * @param excelDateValue The raw date string from Excel (e.g., "10/16/1980").
 	 * @return true if the field's value attribute matches the expected standardized date, false otherwise.
 	 */
-	public static boolean safeSetDateValue(WebElement element, String excelDateValue) {
+	public static boolean safeSetDateValue(WebElement element, String excelDateValue) {  //Safely sets a date value to a web element after converting it from Excel format to the required input format.
 	    
 	    // 1. STANDARDIZATION: Convert the expected date to the browser's required format (YYYY-MM-DD)
 	    // Assume M/d/yyyy is the most common format from Excel.
 	    String expectedStandardizedDate;
 	    try {
-	        expectedStandardizedDate = standardizeDateFormat(excelDateValue, "M/d/yyyy");
+	        expectedStandardizedDate = standardizeDateFormat(excelDateValue, "M/d/yyyy"); //Convert Excel date in "M/d/yyyy" format to a standardized date format.
 	    } catch (Exception e) {
 	        logger.error("❌ Failed to standardize date format for value: " + excelDateValue + ". Aborting input.", e);
 	        return false;
@@ -678,8 +678,8 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	    // 2. JS EXECUTION SETUP (Includes Validation Bypass)
 	    JavascriptExecutor js = (JavascriptExecutor) driver; // Assumes 'driver' is static/accessible
 
-	    String originalOnKeyUp = element.getAttribute("onkeyup");
-	    String originalOnBlur = element.getAttribute("onblur");
+	    String originalOnKeyUp = element.getAttribute("onkeyup"); // JavaScript function assigned to the onkeyup(Repeated) event handler of a web element.
+	    String originalOnBlur = element.getAttribute("onblur");  // JavaScript function assigned to the onblur(Final) event handler of a web element.
 	    
 	    String script = 
 	        // Temporarily disable the application's validation handlers
@@ -703,12 +703,12 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	        // 4. SELF-VERIFICATION
 	        String actualValue = element.getAttribute("value").trim();
 	        
-	        if (expectedStandardizedDate.equals(actualValue)) {
-	            logger.info("✅ Date Input Success: Field populated with verified value: " + actualValue);
+	        if (expectedStandardizedDate.equals(actualValue)) { //if successful entered date then log
+	            logger.info("✅ Date Input Success: Field populated with verified value: " + actualValue);  //if successful entered date then log valid.
 	            return true;
 	        } else {
 	            logger.error(String.format("❌ Date Input FAILURE: Value mismatch after set. Expected: [%s] | Actual: [%s]. The application's JS validation may be too aggressive.",
-	                                    expectedStandardizedDate, actualValue.isEmpty() ? "<BLANK>" : actualValue));
+	                                    expectedStandardizedDate, actualValue.isEmpty() ? "<BLANK>" : actualValue)); //Log failure if date successfully not entered.
 	            return false;
 	        }
 
@@ -720,25 +720,25 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	}
 	
 
-	public static void scrollIntoView(WebDriver driver, WebElement element) {
+	public static void scrollIntoView(WebDriver driver, WebElement element) {  //Scrolls the webpage to make a specific element visible on screen.
 
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-		js.executeScript("arguments[0].scrollIntoView(true);", element);
+		JavascriptExecutor js = (JavascriptExecutor) driver; // Calling JavaScript
+		js.executeScript("arguments[0].scrollIntoView(true);", element); //Scroll to that specific element
 
 	}
 
-	public static void scrollbottom(WebDriver driver) {
+	public static void scrollbottom(WebDriver driver) {  //Scrolls to the very bottom of the webpage.
 
 		JavascriptExecutor js = (JavascriptExecutor) driver;
-		js.executeScript("window.scrollTo(0,document.body.scrollHeight)");
+		js.executeScript("window.scrollTo(0,document.body.scrollHeight)"); 
 
 	}
 
 //     
-	public static void changecolour(String color, WebElement element, WebDriver driver) {
+	public static void changecolour(String color, WebElement element, WebDriver driver) { //Changes an element's background color for visual highlighting during test execution.
 
 		JavascriptExecutor js = (JavascriptExecutor) driver;
-		js.executeScript("arguments[0].style.backgroundColor='" + color + "'", element);
+		js.executeScript("arguments[0].style.backgroundColor='" + color + "'", element); //Changing background color temporarily.
 		try {
 			Thread.sleep(200);
 		} catch (Exception e) {
@@ -748,11 +748,11 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	}
 
 //     https://html-color.codes/
-	public static void flash(WebElement element) {
+	public static void flash(WebElement element) {  //Makes an element blink/flash
 
 		String bgcolor = element.getCssValue("backgroundColor");
 		System.out.println(bgcolor);
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 3; i++) {  //blink/flash 3 times
 //        		changecolour("#0000FF", element, driver); //blue
 			changecolour("#f08080", element, driver);
 			changecolour(bgcolor, element, driver);
@@ -766,7 +766,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public void drawborder(WebElement element) {
+	public void drawborder(WebElement element) { //Draw border for highlighting elements.
 
 		removeBorder();
 //        	JavascriptExecutor js = (JavascriptExecutor)driver;	
@@ -802,10 +802,10 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public static void generateAlert(WebDriver driver, String message) {
+	public static void generateAlert(WebDriver driver, String message) {  //Creates a JavaScript alert popup
 
 		JavascriptExecutor js = (JavascriptExecutor) driver;
-		js.executeScript("alert('" + message + "')");
+		js.executeScript("alert('" + message + "')");  //alert popup with a custom message
 
 	}
 	
@@ -831,19 +831,19 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
     }
 
 
-	public void drawAndFlash(WebElement element) {
+	public void drawAndFlash(WebElement element) { //Draw border first then blink/flash the highlights
 
 		drawborder(element);
 		flash(element);
 
 	}
 
-	public void clickAndDraw(WebElement element) {
+	public void clickAndDraw(WebElement element) { // Draw a border to highlight when clicking on element.
 
 		removeBorder();
 		waitForClickablility(element);
 		// hoverAndClick(element);
-		hoverOver(element);
+		hoverOver(element); //hovering the mouse over a web element without clicking it.
 		jsclick(driver, element);
 		waitForPageAndAjaxToLoad();
 
@@ -856,7 +856,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	 * -------------------------------------------------------------------------------------------------------------------------------------------
 	 **/
 	// Verify Title :
-	public boolean verifyPageTitle(String expectedTitle) {
+	public boolean verifyPageTitle(String expectedTitle) { //Checks if the current page title matches the expected title after waiting for the page to fully load.
 		
 		waitForPageAndAjaxToLoad();
 	    if (expectedTitle == null || expectedTitle.isEmpty()) {
@@ -882,7 +882,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	}
 	// Switch to Other Window:
 
-	public void switchToAnotherWindow(String CurrentWin) {
+	public void switchToAnotherWindow(String CurrentWin) { //Handle new window.
 
 		wait.until(ExpectedConditions.numberOfWindowsToBe(2));
 		Set<String> windows = driver.getWindowHandles();
@@ -895,12 +895,12 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public void hoverOver(WebElement element) {
+	public void hoverOver(WebElement element) { //hovering the mouse over a web element without clicking it.
 
 		try {
 			drawborder(element);
 			Actions actions = new Actions(driver);
-			actions.moveToElement(element).build().perform();
+			actions.moveToElement(element).build().perform(); //mouse hover perform
 		} catch (NoSuchElementException e) {
 			logger.info("Draw Border failed as element not present= " + element);
 		}
@@ -909,13 +909,13 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	
 	
 
-	public boolean checkDownloadAndDelete(String expectedFileName) {
+	public boolean checkDownloadAndDelete(String expectedFileName) { //Download then delete to clear records
 
-		String projectPath = System.getProperty("user.dir") + "\\Downloads";
+		String projectPath = System.getProperty("user.dir") + "\\Downloads"; //Getting the folder path to store download file.
 		boolean isFilePresent = new WebDriverWait(driver, Duration.ofSeconds(60)).until(driver -> {
 			File dir = new File(projectPath);
 			File[] files = dir.listFiles();
-			if (files != null) {
+			if (files != null) { //Checking if file exists
 				for (File file : files) {
 					if (file.getName().contains(expectedFileName)) {
 						return true;
@@ -929,7 +929,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 			File dir = new File(projectPath);
 			for (File file : dir.listFiles()) {
 				if (file.getName().contains(expectedFileName)) {
-					file.delete();
+					file.delete(); //Performing delete operation.
 				}
 			}
 		}
@@ -937,16 +937,16 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public boolean checkDownloadAndDelete(String expectedFileName1, String expectedFileName2,
+	public boolean checkDownloadAndDelete(String expectedFileName1, String expectedFileName2,  //Download then delete to clear records for specific 3 type multiple files.
 			String expectedFileName3) {
 
-		String projectPath = System.getProperty("user.dir") + "\\Downloads";
+		String projectPath = System.getProperty("user.dir") + "\\Downloads";  //Getting the folder path to store download file.
 		boolean isFilePresent = new WebDriverWait(driver, Duration.ofSeconds(60)).until(driver -> {
 			File dir = new File(projectPath);
 			File[] files = dir.listFiles();
 			if (files != null) {
 				for (File file : files) {
-					if (file.getName().contains(expectedFileName1) && file.getName().contains(expectedFileName2)
+					if (file.getName().contains(expectedFileName1) && file.getName().contains(expectedFileName2) //Checking all 3 files
 							&& file.getName().contains(expectedFileName3)) {
 						return true;
 					}
@@ -968,7 +968,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public void hoverOver(By elem) {
+	public void hoverOver(By elem) { //Hover over the mouse pointer
 
 		try {
 			WebElement element = driver.findElement(elem);
@@ -981,17 +981,17 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public void hoverAndClick(WebElement element) {
+	public void hoverAndClick(WebElement element) { //Hover over then click
 
 		drawborder(element);
 		Actions actions = new Actions(driver);
-		actions.moveToElement(element).click().build().perform();
+		actions.moveToElement(element).click().build().perform(); //Performing click after hover over mouse pointer.
 		waitForMlsec(500);
 
 	}
 //------------------------------------------ Screenshot Try -----------------------------------------//
 
-	public void captureAndAttachScreenshot(Scenario scenario, String screenshotName) {
+	public void captureAndAttachScreenshot(Scenario scenario, String screenshotName) {  //Takes screenshots and attaches it to Cucumber test report with error handling.
 
 		try {
 			logger.info("Capturing Screenshot");
@@ -1011,14 +1011,14 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	public String getElementText(WebElement element) {
 
-		return element.getAttribute("textContent").trim();
+		return element.getAttribute("textContent").trim(); //Get the actual text content without extra spaces.
 
 	}
 
 	// Get attribute value of an Element
 	public String getAttributeValue(WebElement element, String attributeName) {
 
-		if ("text".equalsIgnoreCase(attributeName)) {
+		if ("text".equalsIgnoreCase(attributeName)) { //Checking case insensitiveness.
 			return getElementText(element);
 		} else {
 			return element.getAttribute(attributeName);
@@ -1028,12 +1028,12 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	public void scrollToElement(WebElement element) {
 
-		((JavascriptExecutor) driver).executeScript("window.scrollTo(0," + element.getLocation().y + ")");
+		((JavascriptExecutor) driver).executeScript("window.scrollTo(0," + element.getLocation().y + ")");  //Scrolls the page vertically
 
 	}
 	// Compare two lists
 
-	public boolean listCompare(List<String> expectedList, List<String> inputList) {
+	public boolean listCompare(List<String> expectedList, List<String> inputList) { //Check expected and input element list of strings
 
 		boolean status = false;
 		try {
@@ -1054,7 +1054,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	}
 	// Check file is downloaded in the given path
 
-	public boolean isFileDownloaded(String filePath, String fileName) throws InterruptedException {
+	public boolean isFileDownloaded(String filePath, String fileName) throws InterruptedException {  //Check file after Download if its downloaded or not.
 
 		boolean isFilePresent = false;
 		try {
@@ -1062,7 +1062,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 			Thread.sleep(15000);
 			File[] dir_contents = dir.listFiles();
 			for (int i = 0; i < dir_contents.length; i++) {
-				if (dir_contents[i].getName().contains(fileName))
+				if (dir_contents[i].getName().contains(fileName)) //Checks to match file name.
 					isFilePresent = true;
 			}
 		} catch (Exception e) {
@@ -1072,15 +1072,15 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public boolean isFileUpload(String filePath, String fileName) throws InterruptedException {
+	public boolean isFileUpload(String filePath, String fileName) throws InterruptedException { //Checks if file is uploaded or not.
 
 		boolean isFilePresent = false;
 		try {
-			File dir = new File(filePath);
+			File dir = new File(filePath); //Desired file path to lookup.
 			Thread.sleep(8000);
 			File[] dir_contents = dir.listFiles();
 			for (int i = 0; i < dir_contents.length; i++) {
-				if (dir_contents[i].getName().contains(fileName))
+				if (dir_contents[i].getName().contains(fileName)) //Checks the file by file name
 					isFilePresent = true;
 			}
 		} catch (Exception e) {
@@ -1090,36 +1090,36 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public static void switchToWindowbyTitile(String targetTitle) {
+	public static void switchToWindowbyTitile(String targetTitle) {  //Switch to a browser window that has a specific title.
 
-		String origin = Driver.getDriver().getWindowHandle();
+		String origin = Driver.getDriver().getWindowHandle(); //Getting window handle.
 		for (String handle : Driver.getDriver().getWindowHandles()) {
-			Driver.getDriver().switchTo().window(handle);
-			if (Driver.getDriver().getTitle().equals(targetTitle)) {
+			Driver.getDriver().switchTo().window(handle); //switch to new window
+			if (Driver.getDriver().getTitle().equals(targetTitle)) { //checking if is on expected tilled window page.
 				return;
 			}
 		}
-		Driver.getDriver().switchTo().window(origin);
+		Driver.getDriver().switchTo().window(origin); //Switch back to previous page.
 
 	}
 
-	public String getChildWindowTitle() {
+	public String getChildWindowTitle() {  //Getting the first child window.
 
 		String title = "";
-		String mainWindow = driver.getWindowHandle();
-		Set<String> set = driver.getWindowHandles();
-		Iterator<String> itr = set.iterator();
+		String mainWindow = driver.getWindowHandle(); //Getting window handler
+		Set<String> set = driver.getWindowHandles(); //Creating a set for storing windows to take first 1 from list.
+		Iterator<String> itr = set.iterator(); //Iterator to iterate the set value.
 		if (itr.hasNext()) {
 			while (itr.hasNext()) {
-				String childWindow = itr.next();
-				if (!mainWindow.equals(childWindow)) {
+				String childWindow = itr.next(); 
+				if (!mainWindow.equals(childWindow)) { // Comparing with main window
 					driver.switchTo().window(childWindow);
 					waitForPageAndAjaxToLoad();
-					title = driver.switchTo().window(childWindow).getTitle();
+					title = driver.switchTo().window(childWindow).getTitle(); //Getting title
 					driver.close();
 				}
 			}
-			driver.switchTo().window(mainWindow);
+			driver.switchTo().window(mainWindow); // Get back to main window
 		} else {
 			logger.info("No Child window Opened");
 			title = driver.getTitle();
@@ -1129,7 +1129,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public int getOpenWindowsCount() {
+	public int getOpenWindowsCount() { //Count open windows list.
 
 		try {
 			Thread.sleep(4000);
@@ -1142,16 +1142,16 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public void selectFromDropdownByIndex(WebElement el, List<WebElement> optionList, int index) throws Exception {
+	public void selectFromDropdownByIndex(WebElement el, List<WebElement> optionList, int index) throws Exception {  //Select options from dropdown by its index position
 
 		try {
 			el.click();
 			// List<WebElement>
 			// optionList=driver.findElements(By.xpath("//div[contains(@class,'ui-selectmenu-open')]//a"));
 			Thread.sleep(5000);
-			for (int i = 0; i < optionList.size(); i++) {
+			for (int i = 0; i < optionList.size(); i++) { //Loop for searching options by index
 				if (i == index) {
-					waitForElement(optionList.get(i)).click();
+					waitForElement(optionList.get(i)).click(); //Wait and math index number
 					break;
 				}
 			}
@@ -1161,10 +1161,10 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public static Select selectFromDropDownbyVisibleText(WebElement dropdown, String optionName) {
+	public static Select selectFromDropDownbyVisibleText(WebElement dropdown, String optionName) { //Select options from dropdown by visible text
 
-		dropdown.click();
-		waitFor(1);
+		dropdown.click(); //Click on dropdown
+		waitFor(1); //Wait for 1 sec
 		Select select = new Select(dropdown);
 		// List<WebElement> lis = Driver.getDriver().findElements(By.xpath(dropdown));
 		// CommonMethods.waitFor(2);
@@ -1174,7 +1174,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public static Select selectFromDropDownbyValue(WebElement dropdown, String optionName) {
+	public static Select selectFromDropDownbyValue(WebElement dropdown, String optionName) {  //Select options from dropdown by value
 
 		dropdown.click();
 		waitFor(1);
@@ -1182,36 +1182,36 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 		// List<WebElement> lis = Driver.getDriver().findElements(By.xpath(dropdown));
 		// CommonMethods.waitFor(2);
 		// select.selectByVisibleText(optionName);
-		select.deselectByValue(optionName.trim());
+		select.deselectByValue(optionName.trim()); //Removes white spaces by trim
 		// dropdown.click();
 		return select;
 
 	}
 
 //	   From Browser Utils
-	public static String selectFromropDownRendomOption(WebElement dropdown) {
+	public static String selectFromropDownRendomOption(WebElement dropdown) { //Select random options from dropdown text
 
 		Select select = new Select(dropdown);
 		List<WebElement> i = select.getOptions();
 		int size = i.size();
-		int rendomeOption = randInt(0, (size - 1));
-		String eachOption = i.get(rendomeOption).getText().trim();
+		int rendomeOption = randInt(0, (size - 1));  // Generates random index within the dropdown's option range
+		String eachOption = i.get(rendomeOption).getText().trim(); //Get random options by removing extra spaces
 		return eachOption;
 
 	}
 
-	public static int dropDownElementsInTotal(WebElement dropdown) {
+	public static int dropDownElementsInTotal(WebElement dropdown) {  //The total count of all available options in a dropdown.
 
 		dropdown.click();
 		Select dropDown = new Select(dropdown);
 		List<WebElement> e = dropDown.getOptions();
-		int itemCount = e.size();
+		int itemCount = e.size();  //Counts the total number of dropdown options
 		return itemCount;
 
 	}
 
 //	   From Browser Utils
-	public static Select selectFromdropDownByStateAbrivation(WebElement dropdown, String optionName) {
+	public static Select selectFromdropDownByStateAbrivation(WebElement dropdown, String optionName) {  //Selects a dropdown option containing the specified text/Code
 
 		dropdown.click();
 		Select dropDown = new Select(dropdown);
@@ -1219,7 +1219,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 		int itemCount = e.size();
 		for (int l = 0; l < itemCount; l++) {
 			logger.info(e.get(l).getText());
-			if (e.get(l).getText().trim().contains(optionName)) {
+			if (e.get(l).getText().trim().contains(optionName)) {  //Compares each dropdown option's text with the provided string using contains() for partial matching
 				dropDown.selectByIndex(l);
 				break;
 			}
@@ -1230,7 +1230,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	}
 
 //	   From Browser Utils
-	public static void checkBoxYesNO(WebElement checkBox, String fromExcel) {
+	public static void checkBoxYesNO(WebElement checkBox, String fromExcel) { //Checking check box yes/no from excel data.
 
 		if (fromExcel.equalsIgnoreCase("Yes") && checkBox.isSelected()) {
 			logger.info("Check Box already selected for " + checkBox);
@@ -1242,13 +1242,13 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public static void checkBox(WebElement webElement, String option) {
+	public static void checkBox(WebElement webElement, String option) {  //Handles check box interaction
 
 		switch (option) {
 		case "yes":
 			webElement.click();
 			break;
-		case "Yes":
+		case "Yes":      //Case insensitiveness handle by using case.
 			webElement.click();
 			break;
 		case "no":
@@ -1266,32 +1266,32 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	 * @param element
 	 * 
 	 */
-	public void scrollScreen(WebElement element) {
+	public void scrollScreen(WebElement element) {  //Scroll to view particular element
 
 		JavascriptExecutor js = (JavascriptExecutor) driver;
-		js.executeScript("arguments[0].scrollIntoView({block: \"center\", inline: \"center\"});", element);
+		js.executeScript("arguments[0].scrollIntoView({block: \"center\", inline: \"center\"});", element);  //Horizontally and vertically in center element
 
 	}
 
 // **********************  Random Number Methods *******************************
-	public static int randInt(int min, int max) {
+	public static int randInt(int min, int max) {  //Generates random integer 
 
 		Random rand = new Random();
-		int randomNum = rand.nextInt((max - min) + 1) + min;
+		int randomNum = rand.nextInt((max - min) + 1) + min; //ensures max value is inclusive.
 		return randomNum;
 
 	}
 
-	public String getRandomNumber() {
+	public String getRandomNumber() {  //Generates a random positive integer within a limited range by dividing a large random number.
 
 		Random r = new Random();
-		int num = Math.abs(r.nextInt()) / 10000;
+		int num = Math.abs(r.nextInt()) / 10000;  //The division by 10,000 reduces the possible range from billions to thousands ; small number to manage well
 		;
 		return Integer.toString(num);
 
 	}
 
-	public static int getDecimalRandomNumber() {
+	public static int getDecimalRandomNumber() { //Generates random integer with decimal
 
 		// create instance of Random class
 		Random rand = new Random();
@@ -1300,16 +1300,16 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public static void rendomFromDD(String webelement) {
+	public static void rendomFromDD(String webelement) {  //Randomly clicks an element from a list located by an XPath string.
 
-		List<WebElement> options = Driver.getDriver().findElements(By.xpath(webelement));
+		List<WebElement> options = Driver.getDriver().findElements(By.xpath(webelement)); //Finding element by xpath
 		Random rand = new Random();
-		int list = rand.nextInt(options.size());
-		options.get(list).click();
+		int list = rand.nextInt(options.size()); //Generates a random index
+		options.get(list).click(); //Clicking
 
 	}
 
-	public static int rendomNumberWithin(int min, int max) {
+	public static int rendomNumberWithin(int min, int max) {  //Generates a random integer within a specified inclusive range [min, max]
 
 		// define the range
 		int range = max - min + 1;
@@ -1323,6 +1323,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 		return rand;
 
 	}
+	
 //********************** End Of - Random Number Methods *******************************
 
 //	   From Browser Utils: 
