@@ -91,7 +91,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	public static final int ELEMENT_POLLING_TIME_MILIS = 50; //Waiting for element appearing or visibility.
 	public static final int PAGE_LOAD_TIMEOUT_SECONDS = 30;
 	public static final int JQUERY_LOAD_TIMEOUT_SECONDS = 30; //Java constant declaration for tracking jQuery loading timeout
-	public static final int SESSION_TIMEOUT_MINUTES = 16;
+	public static final int SESSION_TIMEOUT_MINUTES = 15;
 	JavascriptExecutor js = (JavascriptExecutor) driver; //Controlling browser with JavaScript commands.
 	WebDriverWait wait = null;
 	public static final Logger logger = LogManager.getLogger(CommonMethods.class); // Log configuration for getting log message.
@@ -123,7 +123,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(JQUERY_LOAD_TIMEOUT_SECONDS)); // Creating wait for JQuery.
 		// Wait for document.readyState to be 'complete'
-		wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState")
+		wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState")  //Wait until document is in ready state.
 				.equals("complete"));
 		// Wait for jQuery.active == 0 if jQuery is present
 		try {
@@ -164,10 +164,10 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 				public WebElement apply(WebDriver driver) {
 
 					WebElement element = driver.findElement(locator);
-					if (element.isDisplayed() && element.isEnabled()) {
+					if (element.isDisplayed() && element.isEnabled()) {  // Wait for element to become both visible and enabled
 						return element;
 					} else {
-						return null; // Wait for element to become both visible and enabled
+						return null; 
 					}
 
 				}
@@ -222,7 +222,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 				boolean isLoaded = false;
 				JavascriptExecutor js = (JavascriptExecutor) arg0;
-				if (js.executeScript("return document.readyState").toString().equalsIgnoreCase("complete")) {
+				if (js.executeScript("return document.readyState").toString().equalsIgnoreCase("complete")) { //Js wait for dom ready.
 					isLoaded = true; //Checking if page is ready to interact or not
 					logger.info("Web Page loaded successfully.");
 				}
@@ -259,15 +259,15 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 		logger.info("Waiting for multiple <tr> elements to be visible and enabled on the screen");
 		Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(ELEMENT_WAIT_TIMEOUT_SECONDS)); //Creates wait
-		ArrayList<WebElement> rowElements = new ArrayList<>();
+		ArrayList<WebElement> rowElements = new ArrayList<>(); //Create a element list
 		try {
 			// Wait until at least one <tr> element is present
 			wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator)); //waiting for element to be present.
 			// Wait until all <tr> elements are visible and enabled
 			List<WebElement> elements = wait.until(driver -> {
 				List<WebElement> foundElements = driver.findElements(locator);
-				boolean allVisibleAndEnabled = foundElements.stream().allMatch(e -> e.isDisplayed() && e.isEnabled());
-				return allVisibleAndEnabled ? foundElements : null;
+				boolean allVisibleAndEnabled = foundElements.stream().allMatch(e -> e.isDisplayed() && e.isEnabled()); //Checks if all displayed and enabled element
+				return allVisibleAndEnabled ? foundElements : null; //If all enabled and displayed only then return element list otherwise return null.
 			});
 			// Convert to ArrayList
 			rowElements = new ArrayList<>(elements);
@@ -289,11 +289,11 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 		logger.info("Wait for Web Page to load completely");
 		JavascriptExecutor js = (JavascriptExecutor) driver; //JavaScript calling to execute
-		long lastCount = -1;
+		long lastCount = -1; // -1 means no previous value is initialized.
 		long sameCountTimes = 0;
 		for (int i = 0; i < 100; i++) {
 			long currentCount = (long) js.executeScript( //Counting http requests.
-					"return window.performance.getEntriesByType('resource').filter(r => !r.responseEnd).length;");
+					"return window.performance.getEntriesByType('resource').filter(r => !r.responseEnd).length;");  //Checking loading/incomplete resource requests.
 			if (currentCount == lastCount) {
 				sameCountTimes++;
 				if (sameCountTimes >= 3)
@@ -347,7 +347,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	}
 
 // browserUtils	
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation")  // Its use to ignore outdated warning by java compiler
 	public static WebElement fluentWait(final WebElement webElement, int timeinsec) { //Flexible wait with polling. For dynamic elements
 
 		FluentWait<WebDriver> wait = new FluentWait<WebDriver>(Driver.getDriver())
@@ -498,7 +498,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 		// .implicitlyWait(0, TimeUnit.SECONDS);
 		logger.info("Checking visibility of the Element on browser screen");
 		try {
-			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(30)) //Wait for repeatedly Checking polling/dynamic elemeny
+			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(30)) //Wait for repeatedly Checking polling/dynamic element
 					.pollingEvery(Duration.ofMillis(ELEMENT_POLLING_TIME_MILIS)).ignoring(Exception.class);
 			Function<WebDriver, Boolean> function = new Function<WebDriver, Boolean>() {
 				public Boolean apply(WebDriver arg0) {
@@ -703,8 +703,8 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	        // 4. SELF-VERIFICATION
 	        String actualValue = element.getAttribute("value").trim();
 	        
-	        if (expectedStandardizedDate.equals(actualValue)) { //if successful entered date then log
-	            logger.info("✅ Date Input Success: Field populated with verified value: " + actualValue);  //if successful entered date then log valid.
+	        if (expectedStandardizedDate.equals(actualValue)) { //if successfully entered date then log
+	            logger.info("✅ Date Input Success: Field populated with verified value: " + actualValue);  //if successful entered date then log with value.
 	            return true;
 	        } else {
 	            logger.error(String.format("❌ Date Input FAILURE: Value mismatch after set. Expected: [%s] | Actual: [%s]. The application's JS validation may be too aggressive.",
@@ -802,7 +802,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public static void generateAlert(WebDriver driver, String message) {  //Creates a JavaScript alert popup
+	public static void generateAlert(WebDriver driver, String message) {  //Creates a JavaScript alert pop-up
 
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("alert('" + message + "')");  //alert popup with a custom message
@@ -844,7 +844,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 		waitForClickablility(element);
 		// hoverAndClick(element);
 		hoverOver(element); //hovering the mouse over a web element without clicking it.
-		jsclick(driver, element);
+		jsclick(driver, element); //JS click on element
 		waitForPageAndAjaxToLoad();
 
 	}
@@ -885,7 +885,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	public void switchToAnotherWindow(String CurrentWin) { //Handle new window.
 
 		wait.until(ExpectedConditions.numberOfWindowsToBe(2));
-		Set<String> windows = driver.getWindowHandles();
+		Set<String> windows = driver.getWindowHandles(); //Gets all the unique windows in a set.
 		for (String s : windows) {
 			if (!s.equalsIgnoreCase(CurrentWin)) {
 				driver.switchTo().window(s);
@@ -1060,7 +1060,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 		try {
 			File dir = new File(filePath);
 			Thread.sleep(15000);
-			File[] dir_contents = dir.listFiles();
+			File[] dir_contents = dir.listFiles(); //Getting file list
 			for (int i = 0; i < dir_contents.length; i++) {
 				if (dir_contents[i].getName().contains(fileName)) //Checks to match file name.
 					isFilePresent = true;
@@ -1078,7 +1078,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 		try {
 			File dir = new File(filePath); //Desired file path to lookup.
 			Thread.sleep(8000);
-			File[] dir_contents = dir.listFiles();
+			File[] dir_contents = dir.listFiles(); //Getting file lists
 			for (int i = 0; i < dir_contents.length; i++) {
 				if (dir_contents[i].getName().contains(fileName)) //Checks the file by file name
 					isFilePresent = true;
@@ -1274,7 +1274,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	}
 
 // **********************  Random Number Methods *******************************
-	public static int randInt(int min, int max) {  //Generates random integer 
+	public static int randInt(int min, int max) {  //Generates random integer by min max range
 
 		Random rand = new Random();
 		int randomNum = rand.nextInt((max - min) + 1) + min; //ensures max value is inclusive.
@@ -1291,7 +1291,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public static int getDecimalRandomNumber() { //Generates random integer with decimal
+	public static int getDecimalRandomNumber() { //Generates random integer with decimal value
 
 		// create instance of Random class
 		Random rand = new Random();
@@ -1300,7 +1300,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public static void rendomFromDD(String webelement) {  //Randomly clicks an element from a list located by an XPath string.
+	public static void rendomFromDD(String webelement) {  //Randomly clicks an element from a list/dropdown located by an XPath string.
 
 		List<WebElement> options = Driver.getDriver().findElements(By.xpath(webelement)); //Finding element by xpath
 		Random rand = new Random();
@@ -1327,39 +1327,39 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 //********************** End Of - Random Number Methods *******************************
 
 //	   From Browser Utils: 
-	public static ArrayList<String> removeDuplicates(ArrayList<String> manufacturerCodeList2) {
+	public static ArrayList<String> removeDuplicates(ArrayList<String> manufacturerCodeList2) {  //Remove duplicate Strings from list while inserting.
 
-		Set<String> set = new LinkedHashSet<>();
+		Set<String> set = new LinkedHashSet<>();  //Set is for unique value
 		set.addAll(manufacturerCodeList2);
-		manufacturerCodeList2.clear();
-		manufacturerCodeList2.addAll(set);
+		manufacturerCodeList2.clear();  //Clears all previous manufacturer code list data
+		manufacturerCodeList2.addAll(set); //Re adding using set to get unique value.
 		// logger.info("manufacturerCodeList2");
 		return manufacturerCodeList2;
 
 	}
 
-	public static int numberOfTheRowsDynamicTable(String partOfTheXpath) {
+	public static int numberOfTheRowsDynamicTable(String partOfTheXpath) { //Dynamically counts table row
 
-		List<WebElement> rows = Driver.getDriver().findElements(By.xpath(partOfTheXpath));
-		int rowNumber = rows.size();
+		List<WebElement> rows = Driver.getDriver().findElements(By.xpath(partOfTheXpath)); //Parameterized locator to find the rows, (reusable).
+		int rowNumber = rows.size(); //Counts the row number
 		return rowNumber;
 
 	}
 
-	public String GetFuture_EST_Date(int days) {
+	public String GetFuture_EST_Date(int days) {  //Generates future EST date
 
-		SimpleDateFormat sd = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat sd = new SimpleDateFormat("MM/dd/yyyy"); //Defines date format
 		Date date = new Date();
-		sd.setTimeZone(TimeZone.getTimeZone("EST"));
+		sd.setTimeZone(TimeZone.getTimeZone("EST")); //Setting time zone to EST=Eastern Standard Time
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.add(Calendar.DATE, days);
-		return sd.format(cal.getTime());
+		return sd.format(cal.getTime()); //Return modified formated date.
 
 	}
 //Shams Addition	 
 
-	public String yesterdaysDate() { // Get the current date
+	public String yesterdaysDate() { // Get the Yesterday date
 
 		Date currentDate = new Date();
 		// Subtract 2 days from the current date
@@ -1377,29 +1377,29 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public void clearDownloadFolder() throws IOException {
+	public void clearDownloadFolder() throws IOException { //Clears Download folder for clean new records
 
 		String projectPath = System.getProperty("user.dir");
-		String downloadFoderPath = "runtime" + File.separator + "downloads";
+		String downloadFoderPath = "runtime" + File.separator + "downloads"; //Get the download path
 		File downloadFolder = new File(projectPath + File.separator + downloadFoderPath);
 		if (downloadFolder.exists()) {
 			if (downloadFolder.listFiles().length > 0) {
 				for (File file : downloadFolder.listFiles()) {
-					FileDeleteStrategy.FORCE.delete(file);
+					FileDeleteStrategy.FORCE.delete(file); //Force delete file
 				}
 			}
 		} else {
-			downloadFolder.mkdir();
+			downloadFolder.mkdir(); //Creates new download folder if not found download folder.
 		}
 
 	}
 
-	public int getFileCountInDownloadFolder() {
+	public int getFileCountInDownloadFolder() {  //Counts the files in download folder
 
 		String projectPath = System.getProperty("user.dir");
 		String downloadFoderPath = "runtime" + File.separator + "downloads";
 		File downloadFolder = new File(projectPath + File.separator + downloadFoderPath);
-		File[] dir_contents = downloadFolder.listFiles();
+		File[] dir_contents = downloadFolder.listFiles(); //Get files list
 		return dir_contents.length;
 
 	}
@@ -1417,17 +1417,17 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	 * @return
 	 * 
 	 */
-	public String leftPadStringWithLeadingZeroes(Integer n, String str) {
+	public String leftPadStringWithLeadingZeroes(Integer n, String str) { //Generate left zeros for desired format or digits number
 
 		// n -> Size of the string to be generated
 		// str -> String to be padded with Zeros
-		String format = "%0" + n + "d";
-		String str1 = String.valueOf(String.format(format, Integer.parseInt(str)));
+		String format = "%0" + n + "d"; //Padding rule formatted with 0
+		String str1 = String.valueOf(String.format(format, Integer.parseInt(str))); //Getting string value and format it
 		return str1; // return String
 
 	}
 
-	public String getCurrentDate(String dateFormate) {
+	public String getCurrentDate(String dateFormate) { //Getting the current date 
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormate);
 		Date d = new Date();
@@ -1435,16 +1435,16 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public String getDateInFormat(String input, String inputDF, String outputDF) {
+	public String getDateInFormat(String input, String inputDF, String outputDF) { //Convert Date from one format to another
 
 		String finalInput = input;
 		if (inputDF.length() - input.length() > 0) {
-			finalInput = leftPadStringWithLeadingZeroes(inputDF.length(), input);
+			finalInput = leftPadStringWithLeadingZeroes(inputDF.length(), input); //Adding left padding with zeroes if needed
 		}
-		DateFormat fmt1 = new SimpleDateFormat(inputDF);
+		DateFormat fmt1 = new SimpleDateFormat(inputDF); 
 		Date date = null;
 		try {
-			date = fmt1.parse(finalInput);
+			date = fmt1.parse(finalInput); //Converts date string to java object
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1455,29 +1455,29 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-//	   From Browser Utils
-	public static String date(String dateFromExcel) {
+     //	 From Browser Utils
+	public static String date(String dateFromExcel) { //Converting excel date into formatted date
 
-		if (dateFromExcel.substring(0, 1).equals("0")) {
-			String date = months(dateFromExcel.substring(3, 6)) + "/" + dateFromExcel.substring(1, 2) + "/"
+		if (dateFromExcel.substring(0, 1).equals("0")) {  //Checks if first character of date is zero or not.
+			String date = months(dateFromExcel.substring(3, 6)) + "/" + dateFromExcel.substring(1, 2) + "/"      //Formatting day, month and year (date contains 01 like)
 					+ dateFromExcel.substring(7);
 			// When reading from excel in format 01-Mar-2019 but application 3/1/2019
 			return date;
 		} else {
-			String date = months(dateFromExcel.substring(3, 6)) + "/" + dateFromExcel.substring(0, 2) + "/"
+			String date = months(dateFromExcel.substring(3, 6)) + "/" + dateFromExcel.substring(0, 2) + "/"     //Formatting day, month and year (full dates like 11)
 					+ dateFromExcel.substring(7);
 			return date;
 		}
 
 	}
 
-	public String getCurrentWindowHandle() {
+	public String getCurrentWindowHandle() { //Window handler
 
-		return driver.getWindowHandle();
+		return driver.getWindowHandle(); 
 
 	}
 
-	public String getChildWindowUrl() {
+	public String getChildWindowUrl() {   //To get child window url
 
 		String mainWindow = driver.getWindowHandle();
 		String url1 = "";
@@ -1486,38 +1486,38 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 		if (itr.hasNext()) {
 			while (itr.hasNext()) {
 				String childWindow = itr.next();
-				if (!mainWindow.equals(childWindow)) {
-					driver.switchTo().window(childWindow);
-					waitForPageAndAjaxToLoad();
-					url1 = driver.getCurrentUrl();
+				if (!mainWindow.equals(childWindow)) {  //Checks if child window is different from main window or not
+					driver.switchTo().window(childWindow); // Switching window to child window
+					waitForPageAndAjaxToLoad();  // waiting for page and dom load
+					url1 = driver.getCurrentUrl(); //Getting current window url
 					driver.close();
 				}
 			}
-			driver.switchTo().window(mainWindow);
+			driver.switchTo().window(mainWindow); //Switching back to main window.
 		}
 		return url1;
 
 	}
 
-	public String getWeekeendDates(int month, int year) {
+	public String getWeekeendDates(int month, int year) {  //Get weekend dates
 
 		int y = year;
 		Month m = Month.of(month);
 		List<Integer> weekendDate = new ArrayList<Integer>();
-		IntStream.rangeClosed(1, YearMonth.of(y, m).lengthOfMonth()).mapToObj((day) -> LocalDate.of(y, m, day))
-				.filter(date -> date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY)
-				.forEach(date -> weekendDate.add(date.getDayOfMonth()));
+		IntStream.rangeClosed(1, YearMonth.of(y, m).lengthOfMonth()).mapToObj((day) -> LocalDate.of(y, m, day))  //Creating list of months and years with dates
+				.filter(date -> date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY)  // Getting weekdays as saturday and sunday
+				.forEach(date -> weekendDate.add(date.getDayOfMonth()));  //Adding every saturday and sunday in weekend date.
 		String date = month + "/" + weekendDate.get(2) + "/" + year;
 		return getDateInFormat(date, "M/d/yyyy", "MM/dd/yyyy");
 
 	}
 //        ********************** from  browser Utils *******************
 
-	public static String getElementText_P(WebElement element) {
+	public static String getElementText_P(WebElement element) {   //Getting visible text from element
 
 		// WebElement element=Driver.getDriver().findElement(locator);
 		String text = "";
-		if (!element.getText().isEmpty()) {
+		if (!element.getText().isEmpty()) { //If element is not empty or null then return text
 			text = element.getText();
 			logger.info("text on element is " + text);
 		}
@@ -1525,45 +1525,45 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public static List<String> getElementsTextByPassingElementList(List<WebElement> list) {
+	public static List<String> getElementsTextByPassingElementList(List<WebElement> list) {  //Getting element text from all elements of a list
 
-		List<String> elemTexts = new ArrayList<>();
-		for (WebElement el : list) {
-			if (!el.getText().isEmpty()) {
-				elemTexts.add(el.getText());
+		List<String> elemTexts = new ArrayList<>();  //Creating list for element text
+		for (WebElement el : list) {   //Iterating in the list
+			if (!el.getText().isEmpty()) { //Check if list element is empty or not
+				elemTexts.add(el.getText()); //Adding texts to the list.
 			}
 		}
 		return elemTexts;
 
 	}
 
-	public static List<String> getElementsTextbyLocator(By locator) {
+	public static List<String> getElementsTextbyLocator(By locator) {  //Gets texts from locator
 
-		List<WebElement> elems = Driver.getDriver().findElements(locator);
+		List<WebElement> elems = Driver.getDriver().findElements(locator); //Finding locator by selenium webdriver
 		List<String> elemTexts = new ArrayList<>();
-		for (WebElement el : elems) {
-			if (!el.getText().isEmpty()) {
-				elemTexts.add(el.getText());
+		for (WebElement el : elems) {   //Iterating in the list
+			if (!el.getText().isEmpty()) {   //Check if list element is empty or not
+				elemTexts.add(el.getText());  //Adding texts to the list.
 			}
 		}
 		return elemTexts;
 
 	}
 
-	public void menuIsVisible(WebElement menu, By locator, int retryCount) {
+	public void menuIsVisible(WebElement menu, By locator, int retryCount) {  //Checking id menu is visible or not with retry
 
-		int currentRetryCount = 0;
-		clickAndDraw(menu);
+		int currentRetryCount = 0;  //Initializing retry count variable
+		clickAndDraw(menu);  //Highlight before clicking on menu
 		try {
 			WebElement element = driver.findElement(locator);
 			waitFor(1);
-			drawborder(element);
+			drawborder(element); //Draw border over element
 			logger.info("----------------- Menu items are visible -------------------");
 			waitFor(1);
 			clickAndDraw(menu);
 		} catch (NoSuchElementException e) {
 			if (currentRetryCount < retryCount) {
-				currentRetryCount = currentRetryCount + 1;
+				currentRetryCount = currentRetryCount + 1; //Increment count
 				logger.info("----------------- Menu items not visible refreshing for time= " + currentRetryCount
 						+ " ------------");
 				driver.navigate().refresh();
@@ -1576,7 +1576,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public void waitTillLoadingScreenVanishes() {
+	public void waitTillLoadingScreenVanishes() {   //Wait to page fully loaded and disappear screen loading 
 
 		logger.info("Vanishing Loading Screen Method");
 		Duration timeout = Duration.ofSeconds(180); // explicit wait 15 sec max limit
@@ -1606,48 +1606,48 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public static void printandlogAllAttributes(WebElement element) {
+	public static void printandlogAllAttributes(WebElement element) {  //Printing all log details of pass, fail, error of html attributes
 
-		JavascriptExecutor js = (JavascriptExecutor) driver;
+		JavascriptExecutor js = (JavascriptExecutor) driver; //JavaScript Executor call to command JavaScript
 		String script = "var items = {}; " + "for (var i = 0; i < arguments[0].attributes.length; ++i) { "
-				+ "    items[arguments[0].attributes[i].name] = arguments[0].attributes[i].value; " + "} "
+				+ "    items[arguments[0].attributes[i].name] = arguments[0].attributes[i].value; " + "} "    //Extracting all html attributes from dom elements like name, value. items etc.
 				+ "return items;";
-		@SuppressWarnings("unchecked")
-		Map<String, String> attributes = (Map<String, String>) js.executeScript(script, element);
+		@SuppressWarnings("unchecked")  //Ignore type safety warnings
+		Map<String, String> attributes = (Map<String, String>) js.executeScript(script, element); //Maps attribute results
 		logger.info("Logging attributes for element: " + element.toString());
-		for (Map.Entry<String, String> entry : attributes.entrySet()) {
-			logger.info("Attribute: " + entry.getKey() + " = " + entry.getValue());
+		for (Map.Entry<String, String> entry : attributes.entrySet()) {  //Iterating map values both key and value
+			logger.info("Attribute: " + entry.getKey() + " = " + entry.getValue());  //Show key and value in log
 		}
 
 	}
 
-	public static boolean isPageLoaded(int timeOutInSec) {
+	public static boolean isPageLoaded(int timeOutInSec) { //Checking id page is loaded or not
 
 		boolean isPageLoaded = false;
 		Duration timeOutInSeconds = Duration.ofSeconds(timeOutInSec);
-		ExpectedCondition<Boolean> expectation = new ExpectedCondition<Boolean>() {
+		ExpectedCondition<Boolean> expectation = new ExpectedCondition<Boolean>() {  //Implementing Conditions
 			public Boolean apply(WebDriver driver) {
 
-				return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
+				return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");  //Checking if document is in ready state or not . If 100% ready then only true. 
 
 			}
 		};
 		try {
 			if (!expectation.equals(true)) {
 				logger.info("************************ Page is refreshing *********************************");
-				Driver.getDriver().navigate().refresh();
+				Driver.getDriver().navigate().refresh();  //Refresh page
 				WebDriverWait wait = new WebDriverWait(Driver.getDriver(), timeOutInSeconds);
-				wait.until(expectation);
+				wait.until(expectation); //Wait till got exception
 				if (expectation.equals(true)) {
 					logger.info("Page is loaded Successfully");
 				}
-				isPageLoaded = true;
+				isPageLoaded = true; //If loaded then true
 			} else if (!expectation.equals(false)) {
 				logger.info("Page is Loaded ");
-				isPageLoaded = true;
+				isPageLoaded = true;  //If no exception then true
 			}
 			return isPageLoaded;
-		} catch (Throwable error) {
+		} catch (Throwable error) {  //Catching if got any error
 			// logger.info(
 			// "Timeout waiting for Page Load Request to complete after " + timeOutInSeconds
 			// + " seconds");
@@ -1656,12 +1656,12 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public static String phoneNumberThreePart(String phoneNumber) {
+	public static String phoneNumberThreePart(String phoneNumber) { //Formatting 10 digit phone number into 3 seperated part
 
 		String phone = null;
 		logger.info("fax number lenght " + phoneNumber.length());
-		if (phoneNumber.length() != 0) {
-			phone = phoneNumber.substring(0, 3) + Keys.TAB + phoneNumber.substring(4, 7) + Keys.TAB
+		if (phoneNumber.length() != 0) { //Checking phone number null or not
+			phone = phoneNumber.substring(0, 3) + Keys.TAB + phoneNumber.substring(4, 7) + Keys.TAB   //Formatting 3 parts by key indexing
 					+ phoneNumber.substring(8);
 		} else {
 			logger.info("There is no Number.");
@@ -1670,10 +1670,10 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	}
 
-	public static void safeSendKeys(WebElement element, String text) {
+	public static void safeSendKeys(WebElement element, String text) {  //Safely enters input value in web element(Interactable)
 //	    WebElement element = driver.findElement(locator);
 
-	    // Step 1: Check if element is enabled
+	    // Step 1: Check if element is enabled and displayed properly
 	    if (!element.isEnabled() || !element.isDisplayed()) {
 	        throw new IllegalStateException("Element located by " + element.toString() + " is disabled and cannot accept input.");
 	    }
@@ -1686,7 +1686,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 
 	    // Step 4: Verify the text was entered correctly
 	    String actualValue = element.getAttribute("value");
-	    if (!text.equals(actualValue)) {
+	    if (!text.equals(actualValue)) {  //Checking if got correct value with expected and actual value
 	        throw new AssertionError("Text mismatch! Expected: " + text + " but found: " + actualValue);
 	    }
 
@@ -1701,7 +1701,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	 * - Confirms it is selected
 	 * - Logs success or throws an error if selection fails
 	 */
-	public static void safeSelectRadioButton(WebElement element) {
+	public static void safeSelectRadioButton(WebElement element) {  // Radio button selection safely
 	    // Step 1: Check if element is enabled and displayed
 	    if (!element.isEnabled() || !element.isDisplayed()) {
 	        throw new IllegalStateException("Radio button located by " + element.toString() + " is disabled or not visible.");
@@ -1719,11 +1719,11 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	    logger.info("✅ Radio button successfully selected: " + element.toString());
 	}
 
-	public static String months(String optionName) {
+	public static String months(String optionName) {  //Selecting month value from option name
 
 		String month = "";
 		switch (optionName) {
-		case "Jan":
+		case "Jan":  //For Jan its value will be 1.
 			month = "1";
 			break;
 		case "Feb":
