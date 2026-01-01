@@ -1,0 +1,11 @@
+.classpath 
+.project 
+.svn 
+.settings 
+debug.log 
+Results/ 
+Downloads/ 
+logs/ 
+test-output/ 
+target/ 
+screenshot\ 

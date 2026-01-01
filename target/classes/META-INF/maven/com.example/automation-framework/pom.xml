@@ -17,7 +17,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		
@@ -144,7 +144,7 @@
 		<dependency>
 			<groupId>tech.grasshopper</groupId>
 			<artifactId>extentreports-cucumber7-adapter</artifactId> <!-- Automatically generates ExtentReports HTML reports from Cucumber test execution -->
-			<version>1.15.0</version>
+			<version>1.14.0</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -295,7 +295,7 @@
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>htmlunit-driver</artifactId> <!-- Browser automation without GUI (headless). Faster execution without browser UI -->
-			<version>4.15.0</version>
+			<version>4.13.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

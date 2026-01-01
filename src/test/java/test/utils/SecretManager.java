@@ -20,25 +20,25 @@ public class SecretManager extends CommonMethods {
 	public static final Logger logger = LogManager.getLogger(CommonMethods.class);
 	
 
-	public static String pullSecret () {
+	public static String pullSecret () {  //Pulling secrets from aws secret manager
 
-		String secretName = "test";
+		String secretName = "test";  //Secret name
 		Region region = Region.US_EAST_1; // Replace with your AWS region
 
-		SecretsManagerClient secretsClient = SecretsManagerClient.builder().region(region).build();
+		SecretsManagerClient secretsClient = SecretsManagerClient.builder().region(region).build();  //Region setup
 
-		GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder().secretId(secretName).build();
+		GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder().secretId(secretName).build(); //Aws secret setup to request for pulling credentials from
 
-		System.out.println(getSecretValueRequest.toString());
+		System.out.println(getSecretValueRequest.toString());  //Printing secret value requesting from aws
 
-		try {
+		try {   //Error handling if not found
 		    logger.debug(secretsClient.getSecretValue(getSecretValueRequest));
-			GetSecretValueResponse getSecretValueResponse = secretsClient.getSecretValue(getSecretValueRequest);
+			GetSecretValueResponse getSecretValueResponse = secretsClient.getSecretValue(getSecretValueRequest);   //Getting value from aws in string format
 
 			return getSecretValueResponse.secretString();
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(); //Error printout
 			return null;
 		}
 
@@ -46,14 +46,14 @@ public class SecretManager extends CommonMethods {
 	
 
 
-	public static String getUserName() {
+	public static String getUserName() {  //Getting username 
 		// Retrieve secrets
 		String secretString = pullSecret();
 		// Replace with your secret name)
-		JSONObject secretJson = new JSONObject(secretString);
+		JSONObject secretJson = new JSONObject(secretString);  //Converts secret string into object format
 		System.out.print(secretJson);
 		
-		String username = secretJson.getString("userId");
+		String username = secretJson.getString("userId"); //Getting user id from the secret object
 		
 		logger.info(LogColor.ThinnerPurple+"userId is: "+ username+LogColor.RESET);
 	
@@ -61,7 +61,7 @@ public class SecretManager extends CommonMethods {
 
 	}
 
-	public static String getPassword() {
+	public static String getPassword() {  //Getting password
 		// Retrieve secrets
 		String secretString = pullSecret();
 		// Replace with your secret name)
@@ -74,7 +74,7 @@ public class SecretManager extends CommonMethods {
 	}
 	
 	//------------ Database Secret ------------------------//
-		public static Map<String, String> getDBSecretDetails() {
+		public static Map<String, String> getDBSecretDetails() {  //Getting database from aws secret
 		    String secretName = ConfigurationReader.getProperty("aws.db.secret.name");
 		    Region region = Region.US_EAST_1;
 
@@ -91,7 +91,7 @@ public class SecretManager extends CommonMethods {
 		        String secretString = getSecretValueResponse.secretString();
 		        JSONObject secretJson = new JSONObject(secretString);
 
-		        Map<String, String> secretMap = new HashMap<>();
+		        Map<String, String> secretMap = new HashMap<>();  //Storing key value pair
 		        secretMap.put("host", secretJson.getString("host"));
 		        secretMap.put("port", secretJson.getString("port"));
 		        secretMap.put("username", secretJson.getString("username"));

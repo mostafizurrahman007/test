@@ -1,418 +1,666 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
-	http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.example</groupId>
-	<artifactId>automation-framework</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<groupId>test</groupId>
+	<artifactId>test</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 
-	<name>Automation Framework</name>
-	<description>Test Automation Framework with Selenium, REST Assured, and Cucumber</description>
+	<name>cucumber2025</name>
+	<!-- FIXME change it to the project's website -->
+	<url>http://www.example.com</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>11</java.version>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
-		
-		<!-- Browser property - can be overridden from command line: -Dbrowser=chrome -->
-		<browser>chrome</browser>
-
-		<!-- Dependency versions -->
-		<junit.jupiter.version>5.10.2</junit.jupiter.version>
-		<junit.version>4.13.2</junit.version>
-		<selenium.version>4.25.0</selenium.version>
-		<testng.version>7.10.2</testng.version>
-		<poi.version>5.2.5</poi.version>
-		<log4j.version>2.23.1</log4j.version>
-		<rest.assured.version>5.4.0</rest.assured.version>
-		<cucumber.version>7.17.0</cucumber.version>
-		<extentreports.version>5.1.2</extentreports.version>
-		<webdrivermanager.version>5.9.1</webdrivermanager.version>
-		<jackson.version>2.17.1</jackson.version>
-		<javafaker.version>1.0.2</javafaker.version>
+		<maven.compiler.release>17</maven.compiler.release>
 	</properties>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>5.11.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
-		<!-- JUnit 5 -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId> <!-- Modern JUnit (Version 5) or updated version of JUnit 3 -->
-			<version>${junit.jupiter.version}</version>
+			<artifactId>junit-jupiter-api</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- Optionally: parameterized tests support -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId> <!-- JUnit Jupiter Engine is the test engine implementation -->
-			<version>${junit.jupiter.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-params</artifactId> <!-- JUnit Jupiter Params provides parameterized testing capabilities for JUnit 5 -->
-			<version>${junit.jupiter.version}</version>
+			<artifactId>junit-jupiter-params</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- JUnit 4 for backward compatibility -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId> <!-- JUnit 4.13.2 is the last stable release of JUnit 4 -->
-			<version>${junit.version}</version>
+
+			<groupId>org.junit.jupiter</groupId>
+
+			<artifactId>junit-jupiter-engine</artifactId>
+
 			<scope>test</scope>
+
 		</dependency>
+
 		<dependency>
 			<groupId>org.junit.vintage</groupId>
-			<artifactId>junit-vintage-engine</artifactId> <!-- JUnit Vintage Engine is a backward compatibility layer that allows JUnit 5 to run JUnit 3 and JUnit 4 tests -->
-			<version>${junit.jupiter.version}</version>
+			<artifactId>junit-vintage-engine</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- TestNG -->
+		<!-- my dependencies-->
 		<dependency>
+
+			<groupId>junit</groupId>
+
+			<artifactId>junit</artifactId>
+
+			<version>4.13.2</version> <!-- Recommended latest version -->
+
+			<scope>test</scope>
+
+		</dependency>
+
+
+		<!-- 
+
+		https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+
+		<!-- 
+
+		https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>4.35.0</version>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/org.testng/testng -->
+
+		<dependency>
+
 			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId> <!-- TestNG is a testing framework inspired by JUnit but with additional features -->
-			<version>${testng.version}</version>
+
+			<artifactId>testng</artifactId>
+
+			<version>7.8.0</version>
+
 			<scope>test</scope>
+
 		</dependency>
 
-		<!-- Selenium -->
+
 		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-java</artifactId> <!-- Selenium Java is the primary dependency for web browser automation. It provides the API to programmatically control web browsers -->
-			<version>${selenium.version}</version>
+
+			<groupId>org.apache.poi</groupId>
+
+			<artifactId>poi</artifactId>
+
+			<version>3.17</version>
+
 		</dependency>
 
-		<!-- WebDriver Manager -->
+
 		<dependency>
-			<groupId>io.github.bonigarcia</groupId>
-			<artifactId>webdrivermanager</artifactId> <!-- Automatically manages WebDriver binaries (ChromeDriver, GeckoDriver, etc.) -->
-			<version>${webdrivermanager.version}</version>
+
+			<groupId>org.apache.poi</groupId>
+
+			<artifactId>poi-ooxml</artifactId>
+
+			<version>3.17</version>
+
 		</dependency>
 
-		<!-- REST Assured -->
+
+		<!-- 
+
+		https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+
 		<dependency>
-			<groupId>io.rest-assured</groupId>
-			<artifactId>rest-assured</artifactId> <!-- REST Assured is a Java DSL for testing RESTful APIs. Helps API testing along with UI testing -->
-			<version>${rest.assured.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.rest-assured</groupId>
-			<artifactId>json-schema-validator</artifactId> <!-- JSON schema validation for REST API responses -->
-			<version>${rest.assured.version}</version>
-			<scope>test</scope>
+
+			<groupId>org.apache.logging.log4j</groupId>
+
+			<artifactId>log4j-core</artifactId>
+
+			<version>2.23.1</version>
+
 		</dependency>
 
-		<!-- Cucumber -->
+
+		<!-- 
+
+		https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
+
+
 		<dependency>
-			<groupId>io.cucumber</groupId>
-			<artifactId>cucumber-java</artifactId> <!-- Cucumber Java provides the Java DSL annotations for writing step definitions -->
-			<version>${cucumber.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.cucumber</groupId>
-			<artifactId>cucumber-testng</artifactId> <!-- Cucumber TestNG provides TestNG integration for running Cucumber tests -->
-			<version>${cucumber.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.cucumber</groupId>
-			<artifactId>cucumber-junit</artifactId> <!-- Cucumber JUnit provides the JUnit 4 test runner integration for Cucumber -->
-			<version>${cucumber.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.cucumber</groupId>
-			<artifactId>cucumber-picocontainer</artifactId> <!-- Cucumber PicoContainer provides dependency injection. Allows sharing state between step definition classes -->
-			<version>${cucumber.version}</version>
-			<scope>test</scope>
+
+			<groupId>org.apache.logging.log4j</groupId>
+
+			<artifactId>log4j-api</artifactId>
+
+			<version>2.23.1</version>
+
 		</dependency>
 
-		<!-- Extent Reports -->
+
+		<!--		<dependency> 
+
+			<groupId>io.github.bonigarcia</groupId> 
+
+			<artifactId>webdrivermanager</artifactId> 
+
+			 			<version>3.3.0</version> 
+
+			<version>5.5.3</version> 
+
+		</dependency>-->
+
+
 		<dependency>
+
 			<groupId>com.aventstack</groupId>
-			<artifactId>extentreports</artifactId> <!-- ExtentReports creates beautiful, interactive HTML reports -->
-			<version>${extentreports.version}</version>
+
+			<artifactId>extentreports</artifactId>
+
+			<version>5.1.1</version>
+
 		</dependency>
+
+
 		<dependency>
+
+			<groupId>io.rest-assured</groupId>
+
+			<artifactId>rest-assured</artifactId>
+
+			<version>3.1.1</version>
+
+			<!-- 	<version>5.3.2</version> -->
+
+			<scope>test</scope>
+
+		</dependency>
+
+
+		<!-- 
+
+		https://mvnrepository.com/artifact/io.rest-assured/rest-assured-common -->
+
+		<dependency>
+
+			<groupId>io.rest-assured</groupId>
+
+			<artifactId>rest-assured-common</artifactId>
+
+			<version>5.3.2</version>
+
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-core -->
+
+		<dependency>
+
+			<groupId>io.cucumber</groupId>
+
+			<artifactId>cucumber-core</artifactId>
+
+			<version>7.17.0</version>
+
+		</dependency>
+
+
+		<!--	https://mvnrepository.com/artifact/io.cucumber/cucumber-java -->
+
+		<dependency>
+
+			<groupId>io.cucumber</groupId>
+
+			<artifactId>cucumber-java</artifactId>
+
+			<version>7.14.0</version>
+
+		</dependency>
+
+
+		<dependency>
+
+			<groupId>io.cucumber</groupId>
+
+			<artifactId>cucumber-junit</artifactId>
+
+			<version>7.14.0</version>
+
+		</dependency>
+
+
+		<!-- 
+
+		https://mvnrepository.com/artifact/com.vimalselvam/cucumber-extentsreport -->
+
+		<dependency>
+
+			<groupId>com.vimalselvam</groupId>
+
+			<artifactId>cucumber-extentsreport</artifactId>
+
+			<version>3.1.1</version>
+
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-testng -->
+
+		<dependency>
+
+			<groupId>io.cucumber</groupId>
+
+			<artifactId>cucumber-testng</artifactId>
+
+			<version>7.14.0</version>
+
+		</dependency>
+
+		<!-- Added for Scenario injection class-->
+
+		<dependency>
+
+			<groupId>io.cucumber</groupId>
+
+			<artifactId>cucumber-picocontainer</artifactId>
+
+			<version>7.0.0</version>
+
+		</dependency>
+
+
+		<!--
+		https://mvnrepository.com/artifact/tech.grasshopper/extentreports-cucumber7-adapter -->
+
+		<dependency>
+
 			<groupId>tech.grasshopper</groupId>
-			<artifactId>extentreports-cucumber7-adapter</artifactId> <!-- Automatically generates ExtentReports HTML reports from Cucumber test execution -->
-			<version>1.15.0</version>
-			<scope>test</scope>
+
+			<artifactId>extentreports-cucumber7-adapter</artifactId>
+
+			<version>1.14.0</version>
+
 		</dependency>
 
-		<!-- Apache POI for Excel -->
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId> <!-- Apache POI reads and writes Microsoft Office documents (.xls, .doc, .ppt) -->
-			<version>${poi.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId> <!-- Apache POI OOXML adds support for newer Office Open XML formats (.xlsx, .pptx, .docx) -->
-			<version>${poi.version}</version>
-		</dependency>
 
-		<!-- Logging -->
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId> <!-- Log4j2 Core provides structured, configurable logging -->
-			<version>${log4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId> <!-- Log4j2 API is the programming interface for logging in applications -->
-			<version>${log4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j-impl</artifactId> <!-- Allows libraries using SLF4J to log via Log4j2 for unified logging -->
-			<version>${log4j.version}</version>
-		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 
-		<!-- Jackson for JSON -->
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId> <!-- Serialize/deserialize API request/response bodies -->
-			<version>${jackson.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId> <!-- Core Jackson processing abstractions -->
-			<version>${jackson.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId> <!-- Jackson annotations for JSON processing -->
-			<version>${jackson.version}</version>
-		</dependency>
 
-		<!-- JavaFaker -->
-		<dependency>
-			<groupId>com.github.javafaker</groupId>
-			<artifactId>javafaker</artifactId> <!-- Generate realistic test data (names, addresses, emails, etc.) -->
-			<version>${javafaker.version}</version>
-		</dependency>
-
-		<!-- Commons IO -->
-		<dependency>
 			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId> <!-- File operations (copy, delete, read, write) and stream handling. Used for managing test files, screenshots, reports -->
+
+			<artifactId>commons-io</artifactId>
+
 			<version>2.16.1</version>
+
 		</dependency>
 
-		<!-- Database -->
+
+		<!--
+		*************************************************************************************************************** -->
+
+
+		<!-- https://mvnrepository.com/artifact/com.oakfusion/iedriver-dep -->
+
 		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId> <!-- Connect to PostgreSQL databases -->
-			<version>42.7.3</version>
-		</dependency>
-		<dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>mssql-jdbc</artifactId> <!-- Connect to SQL Server databases -->
-			<version>12.6.1.jre11</version>
+
+			<groupId>com.oakfusion</groupId>
+
+			<artifactId>iedriver-dep</artifactId>
+
+			<version>2.40.0</version>
+
+			<type>pom</type>
+
 		</dependency>
 
-		<!-- HTTP Client -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId> <!-- HTTP communication for API calls. Custom HTTP requests when REST Assured not sufficient -->
-			<version>4.5.14</version>
-		</dependency>
 
-		<!-- Environment Variables -->
-		<dependency>
-			<groupId>io.github.cdimascio</groupId>
-			<artifactId>java-dotenv</artifactId> <!-- Configuration management for different environments. Load environment variables from .env files -->
-			<version>5.2.2</version>
-		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.fusesource.jansi/jansi -->
 
-		<!-- Additional Utilities -->
+		<!--		<dependency> 
+
+			<groupId>org.fusesource.jansi</groupId> 
+
+			<artifactId>jansi</artifactId> 
+
+			<version>1.11</version> 
+
+		</dependency>-->
+
 		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId> <!-- Handle JSON in API requests/responses, config files -->
-			<version>20240303</version>
-		</dependency>
-		<dependency>
-			<groupId>com.codoid.products</groupId>
-			<artifactId>fillo</artifactId> <!-- Query Excel files using SQL-like syntax. Read test data from Excel with SELECT queries -->
-			<version>1.22</version>
-		</dependency>
-		<dependency>
-			<groupId>org.fusesource.jansi</groupId>
-			<artifactId>jansi</artifactId> <!-- Colored console output in logs/reports. Makes test execution logs more readable with colors -->
-			<version>2.4.0</version>
-		</dependency>
-		<dependency>
-			<groupId>software.amazon.awssdk</groupId>
-			<artifactId>secretsmanager</artifactId> <!-- Access AWS Secrets Manager service for secure credential management -->
-			<version>2.25.52</version>
-		</dependency>
-		
-		<!-- Vault Java Driver -->
-		<dependency>
-			<groupId>com.bettercloud</groupId>
-			<artifactId>vault-java-driver</artifactId> <!-- Retrieve secrets from Vault securely. Secure credential management in tests -->
-			<version>5.1.0</version>
-		</dependency>
-		
-		<!-- AWS Core -->
-		<dependency>
-			<groupId>software.amazon.awssdk</groupId>
-			<artifactId>aws-core</artifactId> <!-- Foundation for AWS SDK services. Required for AWS services integration -->
-			<version>2.25.52</version>
-		</dependency>
-		
-		<!-- AWS Secrets Manager JDBC -->
-		<dependency>
-			<groupId>com.amazonaws.secretsmanager</groupId>
-			<artifactId>aws-secretsmanager-jdbc</artifactId> <!-- Auto-fetch DB credentials from AWS Secrets Manager -->
-			<version>2.0.2</version>
-		</dependency>
-		
-		<!-- Spring JDBC -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId> <!-- Simplifies Java Database Connection operations with template pattern for database testing -->
-			<version>5.3.34</version>
-		</dependency>
-		
-		<!-- Tomcat JDBC -->
-		<dependency>
+
 			<groupId>org.apache.tomcat</groupId>
-			<artifactId>tomcat-jdbc</artifactId> <!-- Database connection pooling for efficient DB operations. Managing DB connections in tests -->
-			<version>10.1.20</version>
+
+			<artifactId>tomcat-jdbc</artifactId>
+
+			<version>9.0.22</version>
+
 		</dependency>
-		
-		<!-- HTMLUnit WebDriver -->
+
+
 		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>htmlunit-driver</artifactId> <!-- Browser automation without GUI (headless). Faster execution without browser UI -->
-			<version>4.15.0</version>
-			<scope>test</scope>
+
+			<groupId>org.springframework</groupId>
+
+			<artifactId>spring-jdbc</artifactId>
+
+			<version>5.1.5.RELEASE</version>
+
 		</dependency>
+
+
+		<dependency>
+
+			<groupId>com.github.javafaker</groupId>
+
+			<artifactId>javafaker</artifactId>
+
+			<version>0.16</version>
+
+
+		</dependency>
+
+		<dependency>
+
+
+			<groupId>org.postgresql</groupId>
+
+
+			<artifactId>postgresql</artifactId>
+
+
+			<version>42.3.9</version>
+
+
+		</dependency>
+
+		<!-- 
+
+		https://mvnrepository.com/artifact/net.sourceforge.htmlunit/webdriver -->
+
+		<dependency>
+
+			<groupId>net.sourceforge.htmlunit</groupId>
+
+			<artifactId>webdriver</artifactId>
+
+			<version>2.6</version>
+
+			<scope>test</scope>
+
+		</dependency>
+
+
+		<dependency>
+
+			<groupId>com.codoid.products</groupId>
+
+			<artifactId>fillo</artifactId>
+
+			<version>1.18</version>
+
+		</dependency>
+
+
+		<dependency>
+
+			<groupId>org.apache.logging.log4j</groupId>
+
+			<artifactId>log4j-slf4j-impl</artifactId>
+
+			<version>2.18.0</version>
+
+			<scope>test</scope>
+
+		</dependency>
+
+
+		<!-- Collord pattern -->
+
+		<dependency>
+
+			<groupId>org.fusesource.jansi</groupId>
+
+			<artifactId>jansi</artifactId>
+
+			<version>2.4.0</version>
+
+		</dependency>
+
+
+		<!-- Hasicorp -->
+
+		<dependency>
+
+			<groupId>com.bettercloud</groupId>
+
+			<artifactId>vault-java-driver</artifactId>
+
+			<version>5.1.0</version>
+
+		</dependency>
+
+
+		<!-- 
+
+		https://mvnrepository.com/artifact/software.amazon.awssdk/secretsmanager -->
+
+		<dependency>
+
+			<groupId>software.amazon.awssdk</groupId>
+
+			<artifactId>secretsmanager</artifactId>
+
+			<version>2.32.25</version>
+
+		</dependency>
+
+
+		<!--
+		https://mvnrepository.com/artifact/com.amazonaws.secretsmanager/aws-secretsmanager-jdbc -->
+
+		<dependency>
+
+			<groupId>com.amazonaws.secretsmanager</groupId>
+
+			<artifactId>aws-secretsmanager-jdbc</artifactId>
+
+			<version>2.0.2</version>
+
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/software.amazon.awssdk/aws-core -->
+
+		<dependency>
+
+			<groupId>software.amazon.awssdk</groupId>
+
+			<artifactId>aws-core</artifactId>
+
+			<version>2.32.25</version>
+
+		</dependency>
+
+
+		<!-- 
+
+		https://mvnrepository.com/artifact/software.amazon.awssdk/test-utils -->
+
+		<dependency>
+
+			<groupId>software.amazon.awssdk</groupId>
+
+			<artifactId>test-utils</artifactId>
+
+			<version>2.32.25</version>
+
+			<scope>test</scope>
+
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/org.json/json -->
+
+		<dependency>
+
+			<groupId>org.json</groupId>
+
+			<artifactId>json</artifactId>
+
+			<version>20240303</version>
+
+		</dependency>
+
+
+		<!-- Apache HTTP Client -->
+
+		<dependency>
+
+			<groupId>org.apache.httpcomponents</groupId>
+
+			<artifactId>httpclient</artifactId>
+
+			<version>4.5.9</version>
+
+		</dependency>
+
+		<dependency>
+
+			<groupId>org.apache.httpcomponents</groupId>
+
+			<artifactId>httpcore</artifactId>
+
+			<version>4.4.9</version>
+
+		</dependency>
+
+
+		<dependency>
+
+			<groupId>com.microsoft.sqlserver</groupId>
+
+			<artifactId>mssql-jdbc</artifactId>
+
+			<version>12.6.1.jre11</version> <!-- Use the version compatible with 
+
+			your JDK -->
+
+		</dependency>
+
+		<!-- ***************** last added _______-->
+
+
+		<!-- JSON handling -->
+
+		<dependency>
+
+			<groupId>com.fasterxml.jackson.core</groupId>
+
+			<artifactId>jackson-databind</artifactId>
+
+			<version>2.16.1</version>
+
+		</dependency>
+
+
+		<!-- (Optional) dotenv-style config, if you prefer env files -->
+
+		<dependency>
+
+			<groupId>io.github.cdimascio</groupId>
+
+			<artifactId>java-dotenv</artifactId>
+
+			<version>5.2.2</version>
+
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.11.0</version>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-					<encoding>${project.build.sourceEncoding}</encoding>
-				</configuration>
-			</plugin>
+		<pluginManagement><!-- lock down plugins versions to avoid using Maven
+			defaults (may be moved to parent pom) -->
+			<plugins>
+				<!-- clean lifecycle, see
+				https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
+				<plugin>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>3.4.0</version>
+				</plugin>
+				<!-- default lifecycle, jar packaging: see
+				https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.3.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.13.0</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.3.0</version>
+					<configuration>
+						<!-- Runner Class Config -->
+						<testFailureIgnore>true</testFailureIgnore>
+						<includes>
+							<include>**/Runner*.class</include>
+						</includes>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.2.5</version>
-				<configuration>
-					<testFailureIgnore>true</testFailureIgnore>
-					<includes>
-						<include>**/Runner*.class</include>
-					</includes>
-					
-					<!-- Extent Report Config -->
-					<systemPropertyVariables>
-						<extent.reporter.spark.start>true</extent.reporter.spark.start>
-						<extent.reporter.spark.out>PipeLine_mvnRun_Report/mavenRUN.html</extent.reporter.spark.out>
-						<browser>${browser}</browser>
-						<jansi.force>true</jansi.force> <!-- This makes the log colorful in GitHub Actions console -->
-					</systemPropertyVariables>
-					
-					<!-- Additional configuration -->
-					<useSystemClassLoader>false</useSystemClassLoader>
-					<argLine>
-						-Dfile.encoding=UTF-8
-						-Xmx1024m
-					</argLine>
-				</configuration>
-			</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>3.2.5</version>
-				<configuration>
-					<testFailureIgnore>true</testFailureIgnore>
-					<includes>
-						<include>**/Runner*.class</include>
-						<include>**/*IT.class</include>
-						<include>**/*IntegrationTest.class</include>
-					</includes>
-					<systemPropertyVariables>
-						<extent.reporter.spark.start>true</extent.reporter.spark.start>
-						<extent.reporter.spark.out>PipeLine_mvnRun_Report/integrationTest.html</extent.reporter.spark.out>
-						<browser>${browser}</browser>
-						<jansi.force>true</jansi.force>
-					</systemPropertyVariables>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>integration-test</goal>
-							<goal>verify</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			
-			<!-- Clean plugin to clean reports directory before run -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>3.3.2</version>
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>PipeLine_mvnRun_Report</directory>
-							<includes>
-								<include>**/*</include>
-							</includes>
-							<followSymlinks>false</followSymlinks>
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>
-		</plugins>
+						<!-- Extent Report Config -->
+						<systemPropertyVariables>
+							<extent.reporter.spark.start>true</extent.reporter.spark.start>
+							<extent.reporter.spark.out>
+								PipeLine_mvnRun_Report/mavenRUN.html</extent.reporter.spark.out>
+							<browser>${browser}</browser>
+							<jansi.force>true</jansi.force> <!-- This is make the
+							log colourfull in github actions consol -->
+						</systemPropertyVariables>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.4.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>3.1.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>3.1.2</version>
+				</plugin>
+				<!-- site lifecycle, see
+				https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
+				<plugin>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.12.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>3.6.1</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
-	
-	<profiles>
-		<!-- Profile for different browsers -->
-		<profile>
-			<id>chrome</id>
-			<properties>
-				<browser>chrome</browser>
-			</properties>
-		</profile>
-		<profile>
-			<id>firefox</id>
-			<properties>
-				<browser>firefox</browser>
-			</properties>
-		</profile>
-		<profile>
-			<id>edge</id>
-			<properties>
-				<browser>edge</browser>
-			</properties>
-		</profile>
-		<profile>
-			<id>headless</id>
-			<properties>
-				<browser>chrome-headless</browser>
-			</properties>
-		</profile>
-	</profiles>
 </project>

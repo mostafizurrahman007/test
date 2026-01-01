@@ -13,7 +13,6 @@ import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.util.SystemOutLogger;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 // import oracle.jdbc.OracleConnection;
@@ -35,7 +34,7 @@ public class DBUtil {
 	
 	//**************************************This is for ORcale Connection: ***********************************
 	
-	public static void establishConnection() throws SQLException {
+	public static void establishConnection() throws SQLException { //Database connection
 		logger.info("login entered in URL Oracle 1");
 		
 		 logger.info("Reading DB Url from config file:  "+ConfigurationReader.getProperty("urlOracle"));
@@ -44,12 +43,12 @@ public class DBUtil {
 			
 			
 			
-		connection = DriverManager.getConnection(ConfigurationReader.getProperty("urlOracle"),
+		connection = DriverManager.getConnection(ConfigurationReader.getProperty("urlOracle"),  //Getting database connection
                  
 				
-				ConfigurationReader.getProperty("oracleUserId"),
+				ConfigurationReader.getProperty("oracleUserId"), //User id configure from credentials
 
-				ConfigurationReader.getProperty("oraclePassword"));
+				ConfigurationReader.getProperty("oraclePassword")); //Password configure from credentials
 		
            logger.info("Connected to DB!!! "+ConfigurationReader.getProperty("urlOracle"));
 	}catch(Exception e){
@@ -61,24 +60,24 @@ public class DBUtil {
 	
 	
 	public static void establishSQLServerConnectionFromSecret() throws SQLException {
-		Map<String, String> secret = SecretManager.getDBSecretDetails();
+		Map<String, String> secret = SecretManager.getDBSecretDetails();  //Secret key value storing in map
 		
-		String host = secret.get("host");
-		String port = secret.get("port");
-		String username = secret.get("username");
-		String password = secret.get("password");
+		String host = secret.get("host"); //Getting host
+		String port = secret.get("port");//Getting port
+		String username = secret.get("username");//Getting user name
+		String password = secret.get("password");//Getting password
 
 
-		String jdbcTemplate = ConfigurationReader.getProperty("jdbc.url.template");
-		String jdbcUrl = String.format(jdbcTemplate, host, port);
+		String jdbcTemplate = ConfigurationReader.getProperty("jdbc.url.template");  //Getting property value from configuration file
+		String jdbcUrl = String.format(jdbcTemplate, host, port);  //Url format
 
 		try {
-			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-			connection = DriverManager.getConnection(jdbcUrl, username, password);
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  //Loading sql server
+			connection = DriverManager.getConnection(jdbcUrl, username, password);  //Establishing connection
 			logger.info(LogColor.Magenta + "Connected to SQL Server at: " + host + LogColor.RESET);
 
 		} catch (Exception e) {
-			logger.error("Failed to connect to SQL Server", e);
+			logger.error("Failed to connect to SQL Server", e);  //Error log
 			throw new SQLException(e);
 		}
 	}
@@ -86,7 +85,7 @@ public class DBUtil {
 	
 	//*********** PDL DB Direct ***********
 	
-	public static void establishSQLServerConnectionDirectly() throws SQLException {
+	public static void establishSQLServerConnectionDirectly() throws SQLException {  //Sql server direct connection
 		String host = ConfigurationReader.getProperty("testdbHost");
 		String port = ConfigurationReader.getProperty("testdbPort");
 		String username = ConfigurationReader.getProperty("testdbUserName");
@@ -136,7 +135,7 @@ public class DBUtil {
 	}
 	
 	
-	public static void establishConnection_Production() throws SQLException {
+	public static void establishConnection_Production() throws SQLException {   //Connection for Production database
 		connection = DriverManager.getConnection(ConfigurationReader.getProperty("urlProdOracle"),
 			 
 
@@ -148,7 +147,7 @@ public class DBUtil {
 
 	}
 //for regression testing 	
-	public static void establishConnection_DEV1() throws SQLException {
+	public static void establishConnection_DEV1() throws SQLException {  //Connection for DEV database
 	 
 		connection = DriverManager.getConnection(ConfigurationReader.getProperty("urlDEV1Oracle"),
 				
@@ -161,7 +160,7 @@ public class DBUtil {
 
 	}
 	
-	public static void establishConnection_RBTCTST_STANDBY() throws SQLException {
+	public static void establishConnection_RBTCTST_STANDBY() throws SQLException {  //Specific named database connection
 		 
 		connection = DriverManager.getConnection(ConfigurationReader.getProperty("url_TST_STANDBY_PRIME_Oracle"),
 				
@@ -174,17 +173,17 @@ public class DBUtil {
 
 	}
 	
-	public static void establishConnection_StandBY() throws SQLException {
-		connection = DriverManager.getConnection(ConfigurationReader.getProperty("urlStandBY"),
+	public static void establishConnection_StandBY() throws SQLException {  //Establishing connection in standby mode
+		connection = DriverManager.getConnection(ConfigurationReader.getProperty("urlStandBY"), //Getting connection configuration
 			 
 
-				ConfigurationReader.getProperty("oracleUserId_StandBY"),
+				ConfigurationReader.getProperty("oracleUserId_StandBY"),  //Getting user from configuration
 
-				ConfigurationReader.getProperty("oraclePassword_StandBY"));
+				ConfigurationReader.getProperty("oraclePassword_StandBY"));   //Getting pass from configuration
 		logger.info("Connected to DB!!! "+ConfigurationReader.getProperty("urlStandBY"));
 	}
 
-	public static void closeConnection() {
+	public static void closeConnection() {  //Closing connection after work done
 
 		try {
 
@@ -213,7 +212,7 @@ public class DBUtil {
 	 *         The rest of the data will be ignored
 	 */
 
-	public static Object getCellValue(String query) {
+	public static Object getCellValue(String query) {  //Get cell value as object
 		logger.info(
 				"from Get first column and row from method getCellValue" + getQueryResultList(query).get(0).get(0));
 		return getQueryResultList(query).get(0).get(0);
@@ -240,7 +239,7 @@ public class DBUtil {
 	 *         only first row will be returned. The rest of the data will be ignored
 	 */
 
-	public static Map<String, Object> getRowMap(String query) {
+	public static Map<String, Object> getRowMap(String query) {  //Getting query result map (key, value pair)
 
 		return getQueryResultMap(query).get(0);
 
@@ -294,21 +293,21 @@ public class DBUtil {
 	 * @return list of values of a single column from the result set
 	 */
 
-	public static List<Object> getColumnData(String query, String column) {
+	public static List<Object> getColumnData(String query, String column) {  //Getting column data
 
 		executeQuery(query);
 
-		List<Object> rowList = new ArrayList<>();
+		List<Object> rowList = new ArrayList<>(); //Creating row list to store data
 
 		ResultSetMetaData rsmd;
 
 		try {
 
-			rsmd = resultSet.getMetaData();
+			rsmd = resultSet.getMetaData(); //Getting meta data
 
-			while (resultSet.next()) {
+			while (resultSet.next()) { //iterate result set
 
-				rowList.add(resultSet.getObject(column));
+				rowList.add(resultSet.getObject(column)); //Add column to row list
 			}
 
 		} catch (SQLException e) {
@@ -375,29 +374,29 @@ public class DBUtil {
 	 * @return List of columns returned in result set
 	 */
 	
-	public static void executeUpdateQuery(String Query) {
+	public static void executeUpdateQuery(String Query) { //Update query for commit
 		executeQuery(Query);
 		executeQuery("Commit");
 		
 	}
 	
-	public static List<Map<String, Object>> executeQueryAndGetResults(String Query) {
+	public static List<Map<String, Object>> executeQueryAndGetResults(String Query) {  //Executing query for getting result
 		 
-		List<Map<String, Object>> results=	getQueryResultMap(Query);
+		List<Map<String, Object>> results=	getQueryResultMap(Query); //Storing result 
 		logger.info("Results from DBUtil: "+results);
 		
 		return results;
 	}
 	
 
-	public static String executeQueryGetColumnValueFromResults(String Query,String ColumnName) {
+	public static String executeQueryGetColumnValueFromResults(String Query,String ColumnName) {  //Query to get column name from results
 		String columnValue=null;
 		
-		List<Map<String, Object>> results=	getQueryResultMap(Query);
+		List<Map<String, Object>> results=	getQueryResultMap(Query); //store unique result data in results by may(stores key, value)
 		logger.info("Results from DBUtil: "+results);
-		for (Map<String, Object> row : results) {
+		for (Map<String, Object> row : results) { //Iterate in results using loop
 
-			columnValue = "" + row.get(ColumnName);
+			columnValue = "" + row.get(ColumnName);  //Getting column name for specific row that id defined or null
 		}
 		logger.info("Column Value from DBUtil: "+columnValue);
 		 
@@ -406,7 +405,7 @@ public class DBUtil {
 	
 	
 
-	public static List<String> getColumnNames(String query) {
+	public static List<String> getColumnNames(String query) {  //Getting column name method
 
 		executeQuery(query);
 
@@ -416,13 +415,13 @@ public class DBUtil {
 
 		try {
 
-			rsmd = resultSet.getMetaData();
+			rsmd = resultSet.getMetaData(); //Get info of result like column length or data size.
 
 			int columnCount = rsmd.getColumnCount();
 
-			for (int i = 1; i <= columnCount; i++) {
+			for (int i = 1; i <= columnCount; i++) {  //lops run till column count
 
-				columns.add(rsmd.getColumnName(i));
+				columns.add(rsmd.getColumnName(i)); //add in columns after getting name from meta data rsmd
 
 			}
 
@@ -437,11 +436,11 @@ public class DBUtil {
 
 	}
 
-	private static void executeQuery(String query) {
+	private static void executeQuery(String query) { //Query execution method
 
 		try {
 
-			statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); //scrollable read-only database statement
 
 		} catch (SQLException e) {
 
@@ -452,7 +451,7 @@ public class DBUtil {
 
 		try {
 
-			resultSet = statement.executeQuery(query);
+			resultSet = statement.executeQuery(query);  //select query execute and return result.
 
 		} catch (SQLException e) {
 
@@ -464,7 +463,7 @@ public class DBUtil {
 
 	}
 
-	public static int getRowCount() throws Exception {
+	public static int getRowCount() throws Exception {  //Row count
 
 		resultSet.last();
 		int rowCount = resultSet.getRow();
@@ -472,12 +471,12 @@ public class DBUtil {
 		return rowCount;
 
 	}
-	public static void writeHeaderLine(XSSFSheet sheet, String query) {
+	public static void writeHeaderLine(XSSFSheet sheet, String query) {  //Write top row
 		Cell headerCell;
-        Row headerRow = sheet.createRow(0);
-        List<Map<String, Object>> listOfMap = DBUtil.getQueryResultMap(query);
-        List<String> columnTitle=DBUtil.getColumnNames(query);
-        int sizeOfColumn=columnTitle.size();
+        Row headerRow = sheet.createRow(0);  //Setting top row as header row
+        List<Map<String, Object>> listOfMap = DBUtil.getQueryResultMap(query);  //Database connection query result
+        List<String> columnTitle=DBUtil.getColumnNames(query);  //Getting column names from database
+        int sizeOfColumn=columnTitle.size();  //Gets the number of columns
         logger.info("Size of the column   "+sizeOfColumn);
         int cNumber=0;
         for(String eachHeader: columnTitle ) {
@@ -501,9 +500,9 @@ public class DBUtil {
 //        headerCell = headerRow.createCell(4);
 //        headerCell.setCellValue("Comment");
     }
-	public static String countValidation(String query) {
+	public static String countValidation(String query) {  //Verify to store count result
 		String countStr=null;
-		String q1="Select Count(*) COUNT "+query;
+		String q1="Select Count(*) COUNT "+query;  //Count query
 		
 		logger.info("q1 from DBUtil"+q1);
 		List<Map<String, Object>> resultsFromq1 = DBUtil.getQueryResultMap(q1);
@@ -520,7 +519,7 @@ public class DBUtil {
  return countStr;
 	
 	}
-	public static void initializeConnection() throws ClassNotFoundException {
+	public static void initializeConnection() throws ClassNotFoundException {  //Connection initialization
 		String host = ConfigurationReader.getProperty("testdbHost");
 		String port = ConfigurationReader.getProperty("testdbPort");
 		String username = ConfigurationReader.getProperty("testdbUserName");
@@ -542,7 +541,7 @@ public class DBUtil {
 	    }
 	}
 	
-	public static int executeQueryUID(String query) {
+	public static int executeQueryUID(String query) {  //Query execution for unique uid mainly insertion, update or delete
 		try {
 			initializeConnection();
 		} catch (ClassNotFoundException e) {
