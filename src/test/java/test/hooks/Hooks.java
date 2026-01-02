@@ -16,13 +16,13 @@ import org.openqa.selenium.WebDriver;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter;
 
+import io.cucumber.java.*;
 import test.utils.CommonMethods;
 import test.utils.DBUtil;
 import test.utils.Driver;
 import test.utils.LogColor;
 import test.utils.ScreenshotUtil;
 import test.utils.SftAssert;
-import io.cucumber.java.*;
 
 public class Hooks extends CommonMethods {
 
@@ -45,7 +45,6 @@ public class Hooks extends CommonMethods {
     public static void beforeAll() {
         logger.info(LogColor.Indigo + " @Before All Hooks " + LogColor.RESET);
         
-        Driver.BrowserSetup();
 
         String browser = System.getProperty("browser");
         if ("edge-headless".equalsIgnoreCase(browser)) {
@@ -121,14 +120,7 @@ public class Hooks extends CommonMethods {
         logger.info("Deleting cookies");
         Driver.getDriver().manage().deleteAllCookies();
 
-        logger.info("Closing the Driver");
-        try {
-            Driver.closeDriver();
-        } catch (Exception e) {
-            logger.info("Connection reset handled");
-        }
-
-        logger.info("Driver Closed");
+        
 
         String tempUserDataDir = System.getProperty("edge.temp.profile");
         if (tempUserDataDir != null) {

@@ -1,0 +1,10 @@
+Feature file folder
+Create Feature file 
+find out what steps are already in @BeforeClass hooks in Runner 
+Add the test Scenario ( test cases with steps)
+Create step definition , add logger, Copy paste unimplemented methods.
+Create page object model.(contains only action methods and variables. sometimes returns booleans) 
+after adding more loggers and action methods, 
+we do Softassertions at the end of the stepD method 
+we do debug and confirm that everything is working fine. ( avoid built in code blocks . step return) 
+check assertion failure is working or not.

@@ -76,7 +76,7 @@ import com.google.common.base.Function;
 
 import io.cucumber.core.gherkin.Step;
 import io.cucumber.java.Scenario;
-
+import test.pages.HomePage_POM;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
@@ -109,7 +109,7 @@ public class CommonMethods extends Driver{  //Extends Drives class properties.
 	// 🔹 Page Object Models
 	// ================================
 
-
+	public static HomePage_POM homePage_pom = new HomePage_POM();
 
 
 

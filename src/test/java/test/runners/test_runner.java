@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import test.utils.CommonMethods;
+import test.utils.Driver;
 import test.utils.LogColor;
 
 @RunWith(Cucumber.class)
@@ -26,9 +27,9 @@ import test.utils.LogColor;
 		features= "src/test/resources/features/", //Feature file path
 		
 		glue= {"test.step_definitions", "test.hooks"},  //Tells cucumber where to look for steps and hooks
-		dryRun= true,  //Validates steps without executing in browser.
+		dryRun= false,  //Validates steps without executing in browser.
 		
-		tags= "@tag1",
+		tags= "@login",
 		monochrome = false
 		
 		)
@@ -40,13 +41,20 @@ public class test_runner extends CommonMethods{
 	@BeforeClass
 	public static void globalSetup() {
 		logger.info(LogColor.ThinnerPurple+"@BeforeClass-Test_Runner "+ "Running one time" +LogColor.RESET);
-		
+		Driver.BrowserSetup();
 	}
 	
 	
 	@AfterClass
 	public static void tearDown() {
 		logger.info(LogColor.ThinnerPurple+"@AfterClass-Test_Runner "+ "Running one time" +LogColor.RESET);
-		
+		logger.info("Closing the Driver");
+        try {
+            Driver.closeDriver();
+        } catch (Exception e) {
+            logger.info("Connection reset handled");
+        }
+
+        logger.info("Driver Closed");
 	}
 }
